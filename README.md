@@ -1,2 +1,2 @@
-# badtourn
-BadTourn - Der Badminton Turnierplaner
+# BadTourn
+BadTourn – Das smarte System für Badmintonturniere
