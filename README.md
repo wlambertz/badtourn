@@ -41,3 +41,26 @@ Hinweis: Änderungen am Submodul-Zeiger müssen im Haupt-Repo separat committed 
 git add wiki
 git commit -m "Update wiki submodule pointer"
 ```
+
+## Windows: Zeilenenden (CRLF/LF)
+
+Wenn auf Windows gearbeitet wird, kann Git beim Stagen/Committen Zeilenenden konvertieren. Um Warnungen zu vermeiden und konsistent zu bleiben:
+
+- Empfohlene Git-Einstellung (global):
+
+  ```bash
+  git config --global core.autocrlf true
+  ```
+
+- Falls es nachträglich zu Mischungen kam, Inhalte einmalig normalisieren:
+
+  ```bash
+  git add --renormalize .
+  git commit -m "Normalize line endings"
+  ```
+
+Optional kann eine `.gitattributes` mit Standard-Textbehandlung helfen:
+
+```gitattributes
+* text=auto
+```
