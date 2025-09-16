@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.sonarqube' version '4.4.1.3373'
+    id 'org.sonarqube' version '6.3.1.5724'
 }
 
 group = 'com.example'
@@ -24,8 +24,6 @@ tasks.withType(JavaCompile).configureEach {
 sonar {
     properties {
         property 'sonar.organization', 'wlambertz-dev'
-        property 'sonar.host.url', 'https://sonarcloud.io'
-        // Update this to your actual SonarCloud project key
-        property 'sonar.projectKey', 'com.example:badtourn-parent'
+        property 'sonar.projectKey', 'wlambertz_badtourn'
     }
 }
