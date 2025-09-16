@@ -3,7 +3,7 @@ plugins {
     id 'org.sonarqube' version '6.3.1.5724'
 }
 
-group = 'com.example'
+group = 'dev.wlambertz'
 version = '0.0.1-SNAPSHOT'
 
 java {
