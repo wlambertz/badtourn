@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.sonarqube' version '4.4.1.3373'
 }
 
 group = 'com.example'
@@ -18,4 +19,13 @@ repositories {
 // Ensure source encoding matches Maven property
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+sonar {
+    properties {
+        property 'sonar.organization', 'wlambertz-dev'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        // Update this to your actual SonarCloud project key
+        property 'sonar.projectKey', 'com.example:badtourn-parent'
+    }
 }
