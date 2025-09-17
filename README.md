@@ -2,6 +2,36 @@
 
 BadTourn – Das smarte System für Badmintonturniere
 
+## Projektstruktur
+
+```text
+badtourn/
+  application/                 App-Bootstrap, Zusammensetzung der Module (Composition Root)
+    organizer/                 Oberfläche/Workflows für Organisator:innen
+    audience/                  Öffentliche Ansichten für Zuschauer:innen ("Turnier-TV")
+  service/
+    player_mgmt/               Spielerverwaltung (PlayerManagement)
+    scoring/                   Ergebnisdienst (ScoringService)
+    tournament_mgmt/           Turnierverwaltung (TournamentManagement)
+  3rd_party/
+    authentication/            Authentifizierung/Identität (Integration)
+    event_bus/                 Event-Bus/Integration
+    search_engine/             Suche/Indexierung
+  wiki/                        GitHub-Wiki als Submodul
+  build.gradle                 Gradle Buildskript (Root)
+  settings.gradle              Gradle Settings
+  gradlew, gradlew.bat         Gradle Wrapper (Unix/Windows)
+  gradle/wrapper/              Wrapper-Konfiguration
+```
+
+- Die fachlichen Module und ihre Verantwortlichkeiten sind im Wiki beschrieben: `wiki/Architecture/Modules.md`.
+- Hohe Ebene der Module (Auszug):
+  - Authentifizierung & Autorisierung: Benutzer, Rollen, Rechte.
+  - Turnierverwaltung: Planung/Konfiguration/Spielpläne.
+  - Spielerverwaltung: Registrierung und Pflege von Spielern/Teams.
+  - Ergebnisdienst: Erfassung/Berechnung von Ergebnissen und Ranglisten.
+  - Öffentliche Informationen: Lesemodelle/Ansichten für Spieler/Zuschauer.
+
 ## Wiki-Submodul
 
 Das GitHub-Wiki ist als Submodul im Ordner `wiki/` eingebunden.
