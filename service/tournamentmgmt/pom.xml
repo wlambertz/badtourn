@@ -27,6 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
+    <sonar.organization>wlambertz-dev</sonar.organization>
 		<java.version>25</java.version>
 		<spring-modulith.version>1.4.1</spring-modulith.version>
 	</properties>
