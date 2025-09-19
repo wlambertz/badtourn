@@ -4,5 +4,12 @@
 # Ensure Windows batch files always use CRLF in Git
 *.bat text eol=crlf
 
+# Ensure Windows CMD scripts use CRLF
+*.cmd text eol=crlf
+
 # Ensure Unix shell scripts remain LF
 *.sh text eol=lf
+
+# Gradle wrapper scripts: keep Unix script LF
+gradlew text eol=lf
+service/tournamentmgmt/gradlew text eol=lf
