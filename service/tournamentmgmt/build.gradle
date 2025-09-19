@@ -1,0 +1,93 @@
+plugins {
+	id 'org.jetbrains.kotlin.jvm' version '1.9.25'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
+	id 'org.springframework.boot' version '3.5.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.google.protobuf' version '0.9.4'
+}
+
+group = 'dev.wlambertz.rallyon'
+version = '0.0.1-SNAPSHOT'
+description = 'Ermöglicht Organisatoren das Planen, Konfigurieren und Durchführen von Badmintonturnieren. Es unterstützt verschiedene Turnierformen (z.B. Kaiserturnier, Schweizer System, KO-Modi), die Verwaltung von Teams, die Erstellung von Spielplänen und die Koordination von Hallenbelegungen. Es benötigt eine eigene Persistenzschicht für primäre, geschäftsrelevante Turnierdaten (z.B. Konfiguration, Regeln, Phasen). '
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springGrpcVersion', "0.11.0")
+	set('springModulithVersion', "1.4.1")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+	implementation 'io.grpc:grpc-services'
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'org.springframework.grpc:spring-grpc-server-web-spring-boot-starter'
+	implementation 'org.springframework.modulith:spring-modulith-events-api'
+	implementation 'org.springframework.modulith:spring-modulith-starter-core'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly 'org.springframework.modulith:spring-modulith-actuator'
+	runtimeOnly 'org.springframework.modulith:spring-modulith-events-amqp'
+	runtimeOnly 'org.springframework.modulith:spring-modulith-observability'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	testImplementation 'org.springframework.grpc:spring-grpc-test'
+	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
+		mavenBom "org.springframework.grpc:spring-grpc-dependencies:${springGrpcVersion}"
+	}
+}
+
+kotlin {
+	compilerOptions {
+		freeCompilerArgs.addAll '-Xjsr305=strict'
+	}
+}
+
+protobuf {
+	protoc {
+		artifact = 'com.google.protobuf:protoc'
+	}
+	plugins {
+		grpc {
+			artifact = 'io.grpc:protoc-gen-grpc-java'
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {
+				option '@generated=omit'
+			}
+		}
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
