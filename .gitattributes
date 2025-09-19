@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Ensure Windows batch files always use CRLF in Git
+*.bat text eol=crlf
+
+# Ensure Unix shell scripts remain LF
+*.sh text eol=lf
