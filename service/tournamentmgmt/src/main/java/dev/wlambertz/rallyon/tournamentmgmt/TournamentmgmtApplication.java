@@ -8,7 +8,7 @@ import org.springframework.modulith.Modulith;
 @Modulith
 public class TournamentmgmtApplication {
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		SpringApplication.run(TournamentmgmtApplication.class, args);
 	}
 
