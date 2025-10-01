@@ -32,6 +32,14 @@ badtourn/
   - Ergebnisdienst: Erfassung/Berechnung von Ergebnissen und Ranglisten.
   - Öffentliche Informationen: Lesemodelle/Ansichten für Spieler/Zuschauer.
 
+## API-Dokumentation
+
+- **Swagger UI**: [Swagger UI (localhost)](http://localhost:8080/swagger-ui/index.html)
+- **OpenAPI JSON**: [`http://localhost:8080/v3/api-docs`](http://localhost:8080/v3/api-docs)
+- **OpenAPI YAML**: [`http://localhost:8080/v3/api-docs.yaml`](http://localhost:8080/v3/api-docs.yaml)
+
+Hinweis: Wenn ein `server.servlet.context-path` konfiguriert ist, wird dieser den Pfaden vorangestellt.
+
 ## Wiki-Submodul
 
 Das GitHub-Wiki ist als Submodul im Ordner `wiki/` eingebunden.
