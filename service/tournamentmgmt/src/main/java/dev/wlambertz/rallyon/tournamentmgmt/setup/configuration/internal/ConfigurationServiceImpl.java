@@ -22,18 +22,41 @@ import dev.wlambertz.rallyon.tournamentmgmt.setup.rules.api.ScoringRules;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.rules.api.SeedingPolicy;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.rules.api.TieBreakRules;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.persistence.TournamentEntity;
+import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.persistence.TournamentMapper;
+import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.persistence.TournamentRepository;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ConfigurationServiceImpl implements ConfigurationService {
 
+    private final TournamentRepository tournamentRepository;
+    private final TournamentMapper tournamentMapper;
+
+    public ConfigurationServiceImpl(TournamentRepository tournamentRepository, TournamentMapper tournamentMapper) {
+        this.tournamentRepository = tournamentRepository;
+        this.tournamentMapper = tournamentMapper;
+    }
+
     @Override
+    @Transactional
     public Tournament createDraft(long organizerId, TournamentName name, Visibility visibility, long actingUserId) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Objects.requireNonNull(name, "Tournament name must not be null");
+        Objects.requireNonNull(visibility, "Visibility must not be null");
+
+        Instant now = Instant.now();
+        TournamentEntity entity = tournamentMapper.toEntityForCreate(organizerId, name, visibility, actingUserId, now);
+        TournamentEntity saved = tournamentRepository.save(entity);
+        return tournamentMapper.toApi(saved);
     }
 
     @Override
