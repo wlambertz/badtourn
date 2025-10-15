@@ -11,7 +11,6 @@ import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TeamSize;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TimeWindow;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Tournament;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TournamentFormat;
-import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TournamentName;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TournamentStatus;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Venue;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Visibility;
@@ -43,7 +42,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public Tournament createDraft(long organizerId, TournamentName name, Visibility visibility, long actingUserId) {
+    public Tournament createDraft(long organizerId, String name, Visibility visibility, long actingUserId) {
         Objects.requireNonNull(name, "Tournament name must not be null");
         Objects.requireNonNull(visibility, "Visibility must not be null");
         return createDraftUseCase.execute(organizerId, name, visibility, actingUserId);
@@ -90,7 +89,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public Tournament setBasics(long tournamentId, TournamentName name, String description, Locale locale, Visibility visibility, long version, long actingUserId) {
+    public Tournament setBasics(long tournamentId, String name, String description, Locale locale, Visibility visibility, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

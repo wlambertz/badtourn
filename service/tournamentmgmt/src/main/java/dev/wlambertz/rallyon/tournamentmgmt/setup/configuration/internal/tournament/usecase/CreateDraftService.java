@@ -1,7 +1,6 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.tournament.usecase;
 
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Tournament;
-import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TournamentName;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Visibility;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.tournament.persistence.entity.TournamentEntity;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.tournament.persistence.mapping.TournamentMapper;
@@ -25,14 +24,25 @@ class CreateDraftService implements CreateDraftUseCase {
 
     @Override
     @Transactional
-    public Tournament execute(long organizerId, TournamentName name, Visibility visibility, long actingUserId) {
-        Objects.requireNonNull(name, "Tournament name must not be null");
+    public Tournament execute(long organizerId, String name, Visibility visibility, long actingUserId) {
+        validateName(name);
         Objects.requireNonNull(visibility, "Visibility must not be null");
 
         Instant now = Instant.now();
         TournamentEntity entity = tournamentMapper.toEntityForCreate(organizerId, name, visibility, actingUserId, now);
         return tournamentMapper.toApi(tournamentRepository.save(entity));
     }
-}
 
+    private static void validateName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Tournament name must not be null");
+        }
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("Tournament name must not be blank");
+        }
+        if (name.length() > 200) {
+            throw new IllegalArgumentException("Tournament name must be <= 200 characters");
+        }
+    }
+}
 

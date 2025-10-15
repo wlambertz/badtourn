@@ -17,11 +17,11 @@ public class TournamentMapper {
         this.tournamentEntityMapper = tournamentEntityMapper;
     }
 
-    public TournamentEntity toEntityForCreate(long organizerId, TournamentName name, Visibility visibility, long actingUserId, Instant now) {
+    public TournamentEntity toEntityForCreate(long organizerId, String name, Visibility visibility, long actingUserId, Instant now) {
         TournamentEntity e = new TournamentEntity();
         e.setOrganizerId(organizerId);
         e.setVisibility(visibility);
-        e.setName(name.value());
+        e.setName(name);
         e.setStatus(TournamentStatus.DRAFT);
         e.setCreatedAt(now);
         e.setCreatedByUserId(actingUserId);
@@ -38,7 +38,7 @@ public class TournamentMapper {
                 .version(flat.version())
                 .organizerId(flat.organizerId())
                 .visibility(flat.visibility())
-                .name(new TournamentName(flat.name()))
+                .name(flat.name())
                 .registrationWindows(List.of())
                 .courts(List.of())
                 .categories(List.of())
@@ -53,4 +53,3 @@ public class TournamentMapper {
                 .build();
     }
 }
-

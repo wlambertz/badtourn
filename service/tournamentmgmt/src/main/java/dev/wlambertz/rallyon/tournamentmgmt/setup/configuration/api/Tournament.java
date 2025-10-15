@@ -21,7 +21,7 @@ public record Tournament(
 	long organizerId,
 	Visibility visibility,
 
-	TournamentName name,
+	String name,
 	TournamentDescription description,
 	Locale locale,
 

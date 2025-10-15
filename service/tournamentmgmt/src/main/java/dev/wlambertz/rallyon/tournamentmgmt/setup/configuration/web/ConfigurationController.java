@@ -325,10 +325,10 @@ public class ConfigurationController {
     }
 
     // Simple request DTOs to keep the controller lean
-    public record CreateDraftRequest(TournamentName name, Visibility visibility) {}
+    public record CreateDraftRequest(String name, Visibility visibility) {}
 
     public record SetBasicsRequest(
-            TournamentName name,
+            String name,
             String description,
             Locale locale,
             Visibility visibility
@@ -367,5 +367,4 @@ public class ConfigurationController {
 
     public record RemoveParticipantRequest(Long playerId, Long teamId, Category category) {}
 }
-
 
