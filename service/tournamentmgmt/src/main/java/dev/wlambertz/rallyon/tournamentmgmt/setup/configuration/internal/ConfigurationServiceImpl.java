@@ -5,7 +5,6 @@ import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Capacity;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.ConfigurationService;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Court;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.DisciplineConfig;
-import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.DisciplineId;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.ParticipantsRoster;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.RegistrationPolicy;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.SchedulingPolicy;
@@ -131,12 +130,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public Tournament addParticipant(long tournamentId, Long playerId, Long teamId, DisciplineId disciplineId, BracketId bracketId, long version, long actingUserId) {
+    public Tournament addParticipant(long tournamentId, Long playerId, Long teamId, long disciplineId, BracketId bracketId, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public Tournament removeParticipant(long tournamentId, Long playerId, Long teamId, DisciplineId disciplineId, BracketId bracketId, long version, long actingUserId) {
+    public Tournament removeParticipant(long tournamentId, Long playerId, Long teamId, long disciplineId, BracketId bracketId, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

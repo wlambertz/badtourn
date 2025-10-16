@@ -263,7 +263,7 @@ public class ConfigurationController {
                 tournamentId,
                 request.playerId(),
                 request.teamId(),
-                DisciplineId.of(request.disciplineId()),
+                request.disciplineId(),
                 BracketId.of(request.bracketId()),
                 version,
                 actingUserId
@@ -281,7 +281,7 @@ public class ConfigurationController {
                 tournamentId,
                 request.playerId(),
                 request.teamId(),
-                DisciplineId.of(request.disciplineId()),
+                request.disciplineId(),
                 BracketId.of(request.bracketId()),
                 version,
                 actingUserId
@@ -367,7 +367,7 @@ public class ConfigurationController {
             SeedingPolicy seedingPolicy
     ) {}
 
-    public record AddParticipantRequest(Long playerId, Long teamId, String disciplineId, String bracketId) {}
+    public record AddParticipantRequest(Long playerId, Long teamId, Long disciplineId, String bracketId) {}
 
-    public record RemoveParticipantRequest(Long playerId, Long teamId, String disciplineId, String bracketId) {}
+    public record RemoveParticipantRequest(Long playerId, Long teamId, Long disciplineId, String bracketId) {}
 }

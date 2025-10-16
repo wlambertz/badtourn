@@ -8,9 +8,9 @@
 
 ## Domain Types
 - `DisciplineConfig`  
-  - `DisciplineId id`: Stable identifier such as `mixed-doubles`.  
+  - `long id`: Stable numeric identifier assigned by the organizer (e.g., `101`).  
   - `Category category`: Singles, Doubles, or Mixed classification used for scheduling logic.  
-  - `String displayName`: UI label (“Mixed Doubles”).  
+  - `String displayName`: UI label ("Mixed Doubles").  
   - `TeamSize teamSize`: Team composition for the discipline.  
   - `List<BracketConfig> brackets`: Child brackets representing skill tiers or open fields.
 - `BracketConfig`  
@@ -25,7 +25,7 @@
 {
   "disciplines": [
     {
-      "id": "mixed-doubles",
+      "id": 101,
       "category": "MIXED",
       "displayName": "Mixed Doubles",
       "teamSize": {
@@ -38,7 +38,8 @@
           "displayName": "A Bracket – Competitive",
           "format": "SWISS",
           "capacity": {
-            "maxTeams": 32
+            "amount": 32,
+            "unit": "PEOPLE"
           }
         },
         {
@@ -60,7 +61,7 @@
 
 ## Validation Rules
 - Every discipline must include at least one bracket.  
-- `DisciplineId` and `BracketId` must be non-blank and unique within their scopes.  
+- Discipline ids must be positive and unique within their tournament; `BracketId` values remain non-blank and unique within their discipline.  
 - Bracket capacities and formats are validated independently; missing capacity implies the tournament-wide default applies.
 
 ## Migration Guidance

@@ -115,7 +115,7 @@ public interface ConfigurationService {
 		long tournamentId,
 		Long playerId,
 		Long teamId,
-		DisciplineId disciplineId,
+		long disciplineId,
 		BracketId bracketId,
 		long version,
 		long actingUserId
@@ -125,7 +125,7 @@ public interface ConfigurationService {
 		long tournamentId,
 		Long playerId,
 		Long teamId,
-		DisciplineId disciplineId,
+		long disciplineId,
 		BracketId bracketId,
 		long version,
 		long actingUserId
