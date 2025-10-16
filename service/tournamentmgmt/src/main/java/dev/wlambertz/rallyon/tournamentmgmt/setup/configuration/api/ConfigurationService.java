@@ -62,11 +62,9 @@ public interface ConfigurationService {
 		long actingUserId
 	);
 
-	Tournament setFormat(
+	Tournament setDisciplines(
 		long tournamentId,
-		TournamentFormat format,
-		List<Category> categories,
-		TeamSize teamSize,
+		List<DisciplineConfig> disciplines,
 		long version,
 		long actingUserId
 	);
@@ -105,9 +103,9 @@ public interface ConfigurationService {
 		long actingUserId
 	);
 
-	Tournament setCategoryRoster(
+	Tournament setBracketRoster(
 		long tournamentId,
-		Category category,
+		BracketId bracketId,
 		ParticipantsRoster roster,
 		long version,
 		long actingUserId
@@ -117,7 +115,8 @@ public interface ConfigurationService {
 		long tournamentId,
 		Long playerId,
 		Long teamId,
-		Category category,
+		DisciplineId disciplineId,
+		BracketId bracketId,
 		long version,
 		long actingUserId
 	);
@@ -126,7 +125,8 @@ public interface ConfigurationService {
 		long tournamentId,
 		Long playerId,
 		Long teamId,
-		Category category,
+		DisciplineId disciplineId,
+		BracketId bracketId,
 		long version,
 		long actingUserId
 	);

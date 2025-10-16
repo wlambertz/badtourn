@@ -30,10 +30,8 @@ public record Tournament(
 	Venue venue,
 	List<Court> courts,
 
-	TournamentFormat format,
-	List<Category> categories,
+	List<DisciplineConfig> disciplines,
 	Capacity capacity,
-	TeamSize teamSize,
 
 	RegistrationPolicy registrationPolicy,
 	SeedingPolicy seedingPolicy,
@@ -47,7 +45,7 @@ public record Tournament(
 	CourtAllocationPolicy courtAllocationPolicy,
 
 	ParticipantsRoster participants,
-	Map<Category, ParticipantsRoster> categoryRosters,
+	Map<BracketId, ParticipantsRoster> bracketRosters,
 
 	TournamentStatus status,
 

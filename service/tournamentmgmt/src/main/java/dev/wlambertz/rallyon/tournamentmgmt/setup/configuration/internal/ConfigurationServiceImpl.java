@@ -1,16 +1,16 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal;
 
+import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.BracketId;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Capacity;
-import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Category;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.ConfigurationService;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Court;
+import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.DisciplineConfig;
+import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.DisciplineId;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.ParticipantsRoster;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.RegistrationPolicy;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.SchedulingPolicy;
-import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TeamSize;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TimeWindow;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Tournament;
-import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TournamentFormat;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.TournamentStatus;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Venue;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.Visibility;
@@ -26,11 +26,8 @@ import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.internal.tournam
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ConfigurationServiceImpl implements ConfigurationService {
@@ -104,7 +101,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public Tournament setFormat(long tournamentId, TournamentFormat format, List<Category> categories, TeamSize teamSize, long version, long actingUserId) {
+    public Tournament setDisciplines(long tournamentId, List<DisciplineConfig> disciplines, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -129,17 +126,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public Tournament setCategoryRoster(long tournamentId, Category category, ParticipantsRoster roster, long version, long actingUserId) {
+    public Tournament setBracketRoster(long tournamentId, BracketId bracketId, ParticipantsRoster roster, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public Tournament addParticipant(long tournamentId, Long playerId, Long teamId, Category category, long version, long actingUserId) {
+    public Tournament addParticipant(long tournamentId, Long playerId, Long teamId, DisciplineId disciplineId, BracketId bracketId, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public Tournament removeParticipant(long tournamentId, Long playerId, Long teamId, Category category, long version, long actingUserId) {
+    public Tournament removeParticipant(long tournamentId, Long playerId, Long teamId, DisciplineId disciplineId, BracketId bracketId, long version, long actingUserId) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
