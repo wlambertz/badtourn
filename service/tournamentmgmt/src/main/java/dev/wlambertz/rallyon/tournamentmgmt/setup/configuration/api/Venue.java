@@ -1,5 +1,4 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api;
-// TODO(review): Consider enriching venue metadata
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
