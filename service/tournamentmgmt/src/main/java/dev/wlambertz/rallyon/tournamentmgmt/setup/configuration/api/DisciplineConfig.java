@@ -1,14 +1,18 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 import java.util.Objects;
 
 public record DisciplineConfig(
-        DisciplineId id,
-        Category category,
-        String displayName,
-        TeamSize teamSize,
-        List<BracketConfig> brackets
+        @NotNull DisciplineId id,
+        @NotNull Category category,
+        @NotBlank String displayName,
+        @NotNull TeamSize teamSize,
+        @NotNull @Valid List<BracketConfig> brackets
 ) {
     public DisciplineConfig {
         Objects.requireNonNull(id, "Discipline id must not be null");
