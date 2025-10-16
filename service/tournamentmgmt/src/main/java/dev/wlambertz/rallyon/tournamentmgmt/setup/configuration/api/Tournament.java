@@ -22,7 +22,7 @@ public record Tournament(
 	Visibility visibility,
 
 	String name,
-	TournamentDescription description,
+	String description,
 	Locale locale,
 
 	TimeWindow schedule,
