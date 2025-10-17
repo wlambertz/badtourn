@@ -63,9 +63,6 @@ public class TournamentEntity {
     @Column(name = "venue_name")
     private String venueName;
 
-    @Column(name = "venue_address")
-    private String venueAddress;
-
     @Column(name = "venue_street")
     private String venueStreet;
 
