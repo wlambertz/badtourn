@@ -1,0 +1,35 @@
+rules:
+  git_commit:
+    description: >-
+      Erzeuge Git-Commit-Nachrichten nach folgenden Konventionen:
+      - Subjekt (≤ 50 Zeichen), Imperativ, klar & beschreibend
+      - Optional Body mit Kontext / Erklärung
+      - Ticket- oder Issue-Nummer, falls vorhanden
+      - Verwende Gitmoji-Präfix gemäß Commit-Typ
+    when:
+      # z. B. wenn Cursor eine Commit-Message erzeugen soll
+      action: generate_commit_message
+    then:
+      prompt: |
+        Du bist ein Git-Commit-Generator. Erzeuge eine Commit-Message mit Gitmoji-Konvention, die diese Regeln befolgt:
+
+        1. Benutze ein passendes **Gitmoji** als Präfix, basierend auf dem Commit-Typ (z. B. ✨, 🐛, 📝, 🔥, etc.).
+        2. Schreibe zuerst eine **Subject-Zeile** (≤ 50 Zeichen), im Imperativ („Add“, „Fix“, „Remove“, etc.), mit Großbuchstaben am Anfang und **ohne** abschließenden Punkt.
+        3. Lasse eine Leerzeile, dann optional einen **Body**, der den **Warum** (Motivation / Kontext) und ggf. **Details** erklärt.
+        4. Falls ein Ticket oder Issue referenziert wird, füge „Fixes #<Nummer>“ oder „Closes #<Nummer>“ hinzu.
+        5. Wenn du mehrere Punkte im Body erklärst, benutze Bullet Points (`- …`).
+        6. Halte jede Commit-Message fokussiert: ein logischer Zweck pro Commit.
+        7. Vermeide Redundanz, z. B. „added“, „changed“ im Subject, solange der Git-Diff das schon zeigt.
+
+        **Beispiele**:
+        ✨ Add user login flow
+        🐛 Fix crash on null pointer in ProfileComponent
+        📝 Update README with usage examples
+        🔥 Remove deprecated API endpoints
+
+        Wenn du diese Regeln nicht einhalten kannst, gib eine Commit-Message zurück, die ihnen so nah wie möglich kommt.
+
+      postprocess:
+        # Optionale Nachbearbeitung, z. B. Kürzen des Subjects, Entfernen überlanger Zeilen
+        trim_subject: true
+        wrap_body: 72
