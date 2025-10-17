@@ -164,18 +164,16 @@ public class ConfigurationController {
         );
     }
 
-    @PutMapping("/{tournamentId}/format")
-    public Tournament setFormat(
+    @PutMapping("/{tournamentId}/disciplines")
+    public Tournament setDisciplines(
             @PathVariable long tournamentId,
-            @RequestBody SetFormatRequest request,
+            @RequestBody SetDisciplinesRequest request,
             @RequestHeader("If-Match") long version,
             @RequestHeader("X-User-Id") long actingUserId
     ) {
-        return configurationService.setFormat(
+        return configurationService.setDisciplines(
                 tournamentId,
-                request.format(),
-                request.categories(),
-                request.teamSize(),
+                request.disciplines(),
                 version,
                 actingUserId
         );
@@ -237,15 +235,21 @@ public class ConfigurationController {
         return configurationService.setParticipantsRoster(tournamentId, roster, version, actingUserId);
     }
 
-    @PutMapping("/{tournamentId}/participants/{category}")
-    public Tournament setCategoryRoster(
+    @PutMapping("/{tournamentId}/participants/brackets/{bracketId}")
+    public Tournament setBracketRoster(
             @PathVariable long tournamentId,
-            @PathVariable Category category,
+            @PathVariable String bracketId,
             @RequestBody ParticipantsRoster roster,
             @RequestHeader("If-Match") long version,
             @RequestHeader("X-User-Id") long actingUserId
     ) {
-        return configurationService.setCategoryRoster(tournamentId, category, roster, version, actingUserId);
+        return configurationService.setBracketRoster(
+                tournamentId,
+                BracketId.of(bracketId),
+                roster,
+                version,
+                actingUserId
+        );
     }
 
     @PostMapping("/{tournamentId}/participants")
@@ -259,7 +263,8 @@ public class ConfigurationController {
                 tournamentId,
                 request.playerId(),
                 request.teamId(),
-                request.category(),
+                request.disciplineId(),
+                BracketId.of(request.bracketId()),
                 version,
                 actingUserId
         );
@@ -276,7 +281,8 @@ public class ConfigurationController {
                 tournamentId,
                 request.playerId(),
                 request.teamId(),
-                request.category(),
+                request.disciplineId(),
+                BracketId.of(request.bracketId()),
                 version,
                 actingUserId
         );
@@ -325,10 +331,10 @@ public class ConfigurationController {
     }
 
     // Simple request DTOs to keep the controller lean
-    public record CreateDraftRequest(TournamentName name, Visibility visibility) {}
+    public record CreateDraftRequest(String name, Visibility visibility) {}
 
     public record SetBasicsRequest(
-            TournamentName name,
+            String name,
             String description,
             Locale locale,
             Visibility visibility
@@ -344,10 +350,8 @@ public class ConfigurationController {
             List<Court> courts
     ) {}
 
-    public record SetFormatRequest(
-            TournamentFormat format,
-            List<Category> categories,
-            TeamSize teamSize
+    public record SetDisciplinesRequest(
+            List<DisciplineConfig> disciplines
     ) {}
 
     public record SetPoliciesRequest(
@@ -363,9 +367,7 @@ public class ConfigurationController {
             SeedingPolicy seedingPolicy
     ) {}
 
-    public record AddParticipantRequest(Long playerId, Long teamId, Category category) {}
+    public record AddParticipantRequest(Long playerId, Long teamId, Long disciplineId, String bracketId) {}
 
-    public record RemoveParticipantRequest(Long playerId, Long teamId, Category category) {}
+    public record RemoveParticipantRequest(Long playerId, Long teamId, Long disciplineId, String bracketId) {}
 }
-
-

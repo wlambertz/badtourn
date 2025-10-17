@@ -1,0 +1,33 @@
+services:
+  tournamentmgmt-db:
+    build:
+      context: ../../persistence/db
+      dockerfile: Dockerfile
+    container_name: tournamentmgmt-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${TOURNAMENTMGMT_DB_NAME:-rallyon}
+      POSTGRES_USER: ${TOURNAMENTMGMT_DB_USER:-rallyon_app}
+      POSTGRES_PASSWORD: ${TOURNAMENTMGMT_DB_PASSWORD:-rallyon_secret}
+    volumes:
+      - tournamentmgmt-db-data:/var/lib/postgresql/data
+
+  tournamentmgmt-service:
+    build:
+      context: ../../service/tournamentmgmt
+      dockerfile: Dockerfile
+    container_name: tournamentmgmt-service
+    depends_on:
+      tournamentmgmt-db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      TOURNAMENTMGMT_DB_URL: jdbc:postgresql://tournamentmgmt-db:5432/${TOURNAMENTMGMT_DB_NAME:-rallyon}
+      TOURNAMENTMGMT_DB_USERNAME: ${TOURNAMENTMGMT_DB_USER:-rallyon_app}
+      TOURNAMENTMGMT_DB_PASSWORD: ${TOURNAMENTMGMT_DB_PASSWORD:-rallyon_secret}
+    ports:
+      - "8080:8080"
+
+volumes:
+  tournamentmgmt-db-data:

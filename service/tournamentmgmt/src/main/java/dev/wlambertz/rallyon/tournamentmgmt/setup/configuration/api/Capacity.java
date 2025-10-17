@@ -1,12 +1,23 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api;
-// TODO(review): Decide capacity per tournament vs per category
 
-public record Capacity(int maxParticipants) {
-	public Capacity {
-		if (maxParticipants <= 0) {
-			throw new IllegalArgumentException("Capacity must be positive");
-		}
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Positive;
+
+public record Capacity(
+	@Positive(message = "Capacity amount must be positive") Integer amount,
+	Unit unit
+) {
+	public boolean isUnbounded() {
+		return amount == null;
+	}
+
+	@AssertTrue(message = "Capacity unit must be provided when amount is set")
+	public boolean isUnitConsistent() {
+		return amount == null || unit != null;
+	}
+
+	public enum Unit {
+		PARTICIPANTS,
+		PEOPLE
 	}
 }
-
-

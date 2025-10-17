@@ -1,5 +1,4 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api;
-// TODO(review): Ensure list covers supported formats from wiki
 
 public enum TournamentFormat {
 	KAISER,
@@ -11,5 +10,3 @@ public enum TournamentFormat {
 	LOTTERY,
 	RANKING
 }
-
-

@@ -1,17 +1,11 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api;
-// TODO(review): Validate business constraints for overlapping windows
+
+import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 
-public record TimeWindow(Instant start, Instant end) {
-	public TimeWindow {
-		if (start == null || end == null) {
-			throw new IllegalArgumentException("TimeWindow requires non-null start and end");
-		}
-		if (end.isBefore(start)) {
-			throw new IllegalArgumentException("TimeWindow end must not be before start");
-		}
-	}
-}
-
-
+@TimeWindowRange
+public record TimeWindow(
+        @NotNull Instant start,
+        @NotNull Instant end
+) {}
