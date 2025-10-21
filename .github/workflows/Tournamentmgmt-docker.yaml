@@ -29,6 +29,9 @@ jobs:
       - name: Make Maven wrapper executable
         run: chmod +x service/tournamentmgmt/mvnw
 
+      - name: Install shared IAM modules
+        run: ./service/tournamentmgmt/mvnw -B -f 3rd_party/iam/pom.xml install
+
       - name: Build tournamentmgmt jar
         run: ./service/tournamentmgmt/mvnw -B -f service/tournamentmgmt/pom.xml clean package
 
