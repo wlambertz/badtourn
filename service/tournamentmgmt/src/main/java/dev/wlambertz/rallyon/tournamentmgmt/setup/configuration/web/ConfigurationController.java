@@ -1,5 +1,6 @@
 package dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.web;
 
+import dev.wlambertz.rallyon.iam.keycloak.spring.AuthenticatedPrincipalProvider;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.configuration.api.*;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.phases.api.Phase;
 import dev.wlambertz.rallyon.tournamentmgmt.setup.rules.api.CourtAllocationPolicy;
@@ -21,20 +22,29 @@ import java.util.Set;
 public class ConfigurationController {
 
     private final ConfigurationService configurationService;
+    private final AuthenticatedPrincipalProvider principalProvider;
 
-    public ConfigurationController(ConfigurationService configurationService) {
+    public ConfigurationController(
+            ConfigurationService configurationService,
+            AuthenticatedPrincipalProvider principalProvider
+    ) {
         this.configurationService = configurationService;
+        this.principalProvider = principalProvider;
+    }
+
+    private long actingUserId() {
+        return principalProvider.requirePrincipal()
+                .userId()
+                .orElseThrow(() -> new IllegalStateException("Token missing numeric rallyon_user_id claim."));
     }
 
     // Lifecycle
     @PostMapping("/drafts")
     public ResponseEntity<Tournament> createDraft(
             @RequestParam("organizerId") long organizerId,
-            @RequestBody CreateDraftRequest request,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestBody CreateDraftRequest request) {
         Tournament created = configurationService.createDraft(
-                organizerId, request.name(), request.visibility(), actingUserId
+                organizerId, request.name(), request.visibility(), actingUserId()
         );
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
@@ -43,74 +53,58 @@ public class ConfigurationController {
     public Tournament updateDraft(
             @PathVariable long tournamentId,
             @RequestBody Tournament draftChanges,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.updateDraft(tournamentId, draftChanges, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.updateDraft(tournamentId, draftChanges, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/publish")
     public Tournament publish(
             @PathVariable long tournamentId,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.publish(tournamentId, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.publish(tournamentId, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/registration/open")
     public Tournament openRegistration(
             @PathVariable long tournamentId,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.openRegistration(tournamentId, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.openRegistration(tournamentId, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/registration/close")
     public Tournament closeRegistration(
             @PathVariable long tournamentId,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.closeRegistration(tournamentId, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.closeRegistration(tournamentId, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/lock")
     public Tournament lockConfiguration(
             @PathVariable long tournamentId,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.lockConfiguration(tournamentId, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.lockConfiguration(tournamentId, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/start")
     public Tournament start(
             @PathVariable long tournamentId,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.start(tournamentId, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.start(tournamentId, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/complete")
     public Tournament complete(
             @PathVariable long tournamentId,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.complete(tournamentId, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.complete(tournamentId, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/cancel")
     public Tournament cancel(
             @PathVariable long tournamentId,
             @RequestParam("reason") String reason,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.cancel(tournamentId, version, reason, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.cancel(tournamentId, version, reason, actingUserId());
     }
 
     // Core configuration setters
@@ -118,9 +112,7 @@ public class ConfigurationController {
     public Tournament setBasics(
             @PathVariable long tournamentId,
             @RequestBody SetBasicsRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setBasics(
                 tournamentId,
                 request.name(),
@@ -128,7 +120,7 @@ public class ConfigurationController {
                 request.locale(),
                 request.visibility(),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -136,15 +128,13 @@ public class ConfigurationController {
     public Tournament setSchedule(
             @PathVariable long tournamentId,
             @RequestBody SetScheduleRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setSchedule(
                 tournamentId,
                 request.schedule(),
                 request.registrationWindows(),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -152,15 +142,13 @@ public class ConfigurationController {
     public Tournament setVenueAndCourts(
             @PathVariable long tournamentId,
             @RequestBody SetVenueAndCourtsRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setVenueAndCourts(
                 tournamentId,
                 request.venue(),
                 request.courts(),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -168,14 +156,12 @@ public class ConfigurationController {
     public Tournament setDisciplines(
             @PathVariable long tournamentId,
             @RequestBody SetDisciplinesRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setDisciplines(
                 tournamentId,
                 request.disciplines(),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -183,26 +169,22 @@ public class ConfigurationController {
     public Tournament setCapacity(
             @PathVariable long tournamentId,
             @RequestBody Capacity capacity,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.setCapacity(tournamentId, capacity, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.setCapacity(tournamentId, capacity, version, actingUserId());
     }
 
     @PutMapping("/{tournamentId}/policies")
     public Tournament setPolicies(
             @PathVariable long tournamentId,
             @RequestBody SetPoliciesRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setPolicies(
                 tournamentId,
                 request.registrationPolicy(),
                 request.schedulingPolicy(),
                 request.courtAllocationPolicy(),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -210,9 +192,7 @@ public class ConfigurationController {
     public Tournament setRules(
             @PathVariable long tournamentId,
             @RequestBody SetRulesRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setRules(
                 tournamentId,
                 request.scoringRules(),
@@ -220,7 +200,7 @@ public class ConfigurationController {
                 request.matchDurationPolicy(),
                 request.seedingPolicy(),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -229,10 +209,8 @@ public class ConfigurationController {
     public Tournament setParticipantsRoster(
             @PathVariable long tournamentId,
             @RequestBody ParticipantsRoster roster,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.setParticipantsRoster(tournamentId, roster, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.setParticipantsRoster(tournamentId, roster, version, actingUserId());
     }
 
     @PutMapping("/{tournamentId}/participants/brackets/{bracketId}")
@@ -240,15 +218,13 @@ public class ConfigurationController {
             @PathVariable long tournamentId,
             @PathVariable String bracketId,
             @RequestBody ParticipantsRoster roster,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.setBracketRoster(
                 tournamentId,
                 BracketId.of(bracketId),
                 roster,
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -256,9 +232,7 @@ public class ConfigurationController {
     public Tournament addParticipant(
             @PathVariable long tournamentId,
             @RequestBody AddParticipantRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.addParticipant(
                 tournamentId,
                 request.playerId(),
@@ -266,7 +240,7 @@ public class ConfigurationController {
                 request.disciplineId(),
                 BracketId.of(request.bracketId()),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -274,9 +248,7 @@ public class ConfigurationController {
     public Tournament removeParticipant(
             @PathVariable long tournamentId,
             @RequestBody RemoveParticipantRequest request,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
+            @RequestHeader("If-Match") long version) {
         return configurationService.removeParticipant(
                 tournamentId,
                 request.playerId(),
@@ -284,7 +256,7 @@ public class ConfigurationController {
                 request.disciplineId(),
                 BracketId.of(request.bracketId()),
                 version,
-                actingUserId
+                actingUserId()
         );
     }
 
@@ -293,10 +265,8 @@ public class ConfigurationController {
     public Tournament definePhases(
             @PathVariable long tournamentId,
             @RequestBody List<Phase> phases,
-            @RequestHeader("If-Match") long version,
-            @RequestHeader("X-User-Id") long actingUserId
-    ) {
-        return configurationService.definePhases(tournamentId, phases, version, actingUserId);
+            @RequestHeader("If-Match") long version) {
+        return configurationService.definePhases(tournamentId, phases, version, actingUserId());
     }
 
     @PostMapping("/{tournamentId}/validate")
@@ -371,3 +341,4 @@ public class ConfigurationController {
 
     public record RemoveParticipantRequest(Long playerId, Long teamId, Long disciplineId, String bracketId) {}
 }
+
