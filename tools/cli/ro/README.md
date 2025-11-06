@@ -1,0 +1,48 @@
+# RallyOn Developer CLI (ro)
+
+## Build
+
+- Windows PowerShell
+```
+cd tools/cli/ro
+go mod tidy
+go build -o ..\..\..\bin\ro.exe .
+```
+
+## Usage
+
+- Show help
+```
+ro --help
+```
+- Config
+```
+ro config show --json
+```
+- Build / Test / Run
+```
+ro build [--fast|--ci]
+ro test
+ro run service tournamentmgmt --env dev --port 8080
+```
+- Docker
+```
+ro docker build [--tag <t>] [--push]
+ro docker compose up [--profile dev]
+ro docker compose down
+```
+- Deploy
+```
+# requires GITHUB_TOKEN in env
+ro deploy --env dev
+```
+- Docs
+```
+ro docs generate  # writes docs/dev-cli.md
+```
+
+## Shell completion
+
+Cobra provides the `ro completion` command. See `ro completion --help` and follow your shell instructions.
+
+
