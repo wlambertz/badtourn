@@ -16,6 +16,18 @@ docker:
   workflow: .github/workflows/Tournamentmgmt-docker.yaml
   imageRepo: rallyon/tournamentmgmt
 
+deploy:
+  repo: wlambertz/rallyon
+  workflow: .github/workflows/Tournamentmgmt-deploy.yaml
+  defaultRef: main
+  envRefs:
+    prod: main
+  requireClean: true
+  requireProtected: true
+  requireGreen: true
+  pollInterval: 15s
+  pollTimeout: 10m
+
 git:
   conventionalCommits: true
 

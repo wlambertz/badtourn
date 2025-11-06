@@ -34,8 +34,10 @@ ro docker compose down
 - Deploy
 ```
 # requires GITHUB_TOKEN in env
-ro deploy --env dev
+ro deploy --env dev --dry-run   # safe preview
+ro deploy --env prod --yes      # skip prompt for automation
 ```
+- Deploy defaults live under `deploy.*` in `ro.yaml` (repo, workflow slug, ref mapping, safety gates). Override with `RO_DEPLOY_*` env vars when needed.
 - Docs
 ```
 ro docs generate  # writes docs/dev-cli.md
