@@ -1,0 +1,26 @@
+project:
+  name: rallyon
+  root: .
+
+paths:
+  serviceRoot: service/tournamentmgmt
+  appRoot: application
+  thirdPartyRoot: 3rd_party
+  adminRoot: admin
+
+build:
+  mavenWrapper: ./mvnw
+  defaultGoals: ["clean", "verify"]
+
+docker:
+  workflow: .github/workflows/Tournamentmgmt-docker.yaml
+  imageRepo: rallyon/tournamentmgmt
+
+git:
+  conventionalCommits: true
+
+output:
+  json: false
+  verbose: false
+
+
