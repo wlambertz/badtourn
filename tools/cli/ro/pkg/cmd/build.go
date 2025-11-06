@@ -7,6 +7,7 @@ import (
     "time"
 
     "github.com/spf13/cobra"
+    "github.com/wlambertz/rallyon/tools/cli/ro/pkg/config"
     "github.com/wlambertz/rallyon/tools/cli/ro/pkg/execx"
 )
 
@@ -30,7 +31,8 @@ var buildCmd = &cobra.Command{
             goals = []string{"clean", "verify", "-B"}
         }
 
-        cmdline := append([]string{cfg.Build.MavenWrapper}, goals...)
+        mvn := config.MavenExecutablePath(cfg.Paths.ServiceRoot, cfg.Build.MavenWrapper)
+        cmdline := append([]string{mvn}, goals...)
         slog.Info("exec", "cmd", cmdline, "cwd", cfg.Paths.ServiceRoot)
         ctx, cancel := context.WithTimeout(context.Background(), 2*time.Hour)
         defer cancel()

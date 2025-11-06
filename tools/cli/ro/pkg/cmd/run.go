@@ -4,9 +4,9 @@ import (
     "context"
     "fmt"
     "log/slog"
-    "time"
 
     "github.com/spf13/cobra"
+    "github.com/wlambertz/rallyon/tools/cli/ro/pkg/config"
     "github.com/wlambertz/rallyon/tools/cli/ro/pkg/execx"
 )
 
@@ -25,7 +25,8 @@ var runTournamentmgmtCmd = &cobra.Command{
     Short: "Run tournament management service locally",
     RunE: func(cmd *cobra.Command, args []string) error {
         goals := []string{"spring-boot:run"}
-        cmdline := append([]string{cfg.Build.MavenWrapper}, goals...)
+        mvn := config.MavenExecutablePath(cfg.Paths.ServiceRoot, cfg.Build.MavenWrapper)
+        cmdline := append([]string{mvn}, goals...)
         env := map[string]string{}
         if flagRunPort > 0 {
             env["SERVER_PORT"] = fmt.Sprintf("%d", flagRunPort)

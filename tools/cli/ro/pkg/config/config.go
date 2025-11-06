@@ -147,4 +147,20 @@ func normalizeMavenWrapper(value string) string {
     return value
 }
 
+// MavenExecutablePath returns an absolute path to the wrapper inside the service root.
+func MavenExecutablePath(serviceRoot string, wrapper string) string {
+    // If wrapper already has a path separator or is absolute, join/clean accordingly
+    if wrapper == "" {
+        wrapper = "mvnw"
+        if os.PathSeparator == '\\' {
+            wrapper = "mvnw.cmd"
+        }
+    }
+    if filepath.IsAbs(wrapper) {
+        return wrapper
+    }
+    // Ensure we point to the wrapper located in the service root
+    return filepath.Clean(filepath.Join(serviceRoot, wrapper))
+}
+
 

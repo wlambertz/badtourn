@@ -7,6 +7,7 @@ import (
     "time"
 
     "github.com/spf13/cobra"
+    "github.com/wlambertz/rallyon/tools/cli/ro/pkg/config"
     "github.com/wlambertz/rallyon/tools/cli/ro/pkg/execx"
 )
 
@@ -14,7 +15,8 @@ var testCmd = &cobra.Command{
     Use:   "test",
     Short: "Run test suites",
     RunE: func(cmd *cobra.Command, args []string) error {
-        cmdline := []string{cfg.Build.MavenWrapper, "test"}
+        mvn := config.MavenExecutablePath(cfg.Paths.ServiceRoot, cfg.Build.MavenWrapper)
+        cmdline := []string{mvn, "test"}
         slog.Info("exec", "cmd", cmdline, "cwd", cfg.Paths.ServiceRoot)
         ctx, cancel := context.WithTimeout(context.Background(), 1*time.Hour)
         defer cancel()
