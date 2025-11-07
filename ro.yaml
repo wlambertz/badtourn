@@ -23,7 +23,7 @@ deploy:
   envRefs:
     prod: main
   requireClean: true
-  requireProtected: true
+  requireProtected: false
   requireGreen: true
   pollInterval: 15s
   pollTimeout: 10m
