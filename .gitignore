@@ -50,3 +50,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Go build caches
+tools/cli/ro/.gocache/
