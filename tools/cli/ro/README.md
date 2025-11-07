@@ -46,5 +46,3 @@ ro docs generate  # writes docs/dev-cli.md
 ## Shell completion
 
 Cobra provides the `ro completion` command. See `ro completion --help` and follow your shell instructions.
-
-
