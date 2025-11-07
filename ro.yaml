@@ -23,7 +23,7 @@ deploy:
   envRefs:
     prod: main
   requireClean: true
-  requireProtected: false
+  requireProtected: false # is off due its dependency on legacy branch protection rules, despite having a ruleset in place
   requireGreen: true
   pollInterval: 15s
   pollTimeout: 10m
