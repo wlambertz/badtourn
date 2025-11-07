@@ -1,0 +1,72 @@
+# RallyOn Developer CLI (`ro`)
+
+## Overview
+- A single Go binary that wraps everyday build, test, run, docker, deploy, git, and docs flows.
+- Lives in `tools/cli/ro`; ship platform-specific binaries via `go build`.
+- Reads defaults from `ro.yaml`, overridable via `RO_*` environment variables or CLI flags.
+
+## Installation
+```bash
+cd tools/cli/ro
+go mod tidy               # once per clone
+go build -o ../../bin/ro # linux/mac
+# or: go build -o ../../bin/ro.exe # windows
+```
+Add `bin/` to your `PATH` or call the binary directly (e.g., `./bin/ro --help`).
+
+## Config (`ro.yaml`)
+- `project.*`, `paths.*`: repo layout.
+- `build.*`: Maven wrapper location and default goals.
+- `docker.*`: workflow reference + image repo (used by `ro docker`).
+- `deploy.*`:
+  - `repo`, `workflow`: GitHub owner/repo + workflow file name.
+  - `defaultRef`: branch used when no env-specific mapping exists.
+  - `envRefs`: map env → required branch (e.g., `prod: main`).
+  - `requireClean`, `requireProtected`, `requireGreen`: safety gates before deployment.
+  - `pollInterval`, `pollTimeout`: workflow polling cadence.
+- `output.*`: default verbosity / JSON logging.
+- Override any value via `RO_<SECTION>_<FIELD>=...` (e.g., `RO_DEPLOY_REQUIREPROTECTED=false`).
+
+## Core Commands
+```bash
+ro build [--fast|--ci]
+ro test
+ro run service tournamentmgmt [--env dev --port 8080]
+ro docker build [--tag <tag>] [--push]
+ro docker compose up|down [--profile dev]
+ro deploy --env dev --dry-run
+ro git status|branch|rebase|commit
+```
+Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-run` is supported by destructive commands, and `--yes` skips confirmation prompts.
+
+### Git Helpers
+- `ro git status` – short status by default; `--long` for full output.
+- `ro git branch` – shows branch/ahead-behind; add `--verbose` for `git branch -vv`.
+- `ro git rebase --onto origin/main` – runs `git pull --rebase --autostash`.
+- `ro git commit` – guides a Conventional Commit (prompts for type/scope/summary, supports `--breaking`, `--wip`, `--all` to stage tracked files).
+  - Preview shown before committing; `--yes` bypasses the confirmation prompt.
+  - Use `--body`/`--breaking-notes` to supply additional paragraphs.
+
+## Deploy Workflow
+1. Set `GITHUB_TOKEN` (PAT with `repo` + `workflow` scopes) in your shell or secret store.
+2. Ensure your working tree is clean and on the branch required for the chosen environment.
+3. Run:
+   ```bash
+   ro deploy --env dev --dry-run   # preview
+   ro deploy --env prod --yes      # confirmation bypass for CI
+   ```
+4. The CLI enforces:
+   - Clean git status unless `--yes`.
+   - Branch matches `deploy.envRefs[env]` (can be overridden with `--yes`).
+   - Branch protection check (`deploy.requireProtected`) via GitHub’s REST API. Disable via config if you use only modern rulesets.
+   - Latest commit status is green (`deploy.requireGreen`).
+5. On success, it dispatches the configured GitHub Actions workflow and polls until completion, logging the run URL and conclusion.
+
+## Troubleshooting
+- `GITHUB_TOKEN env var is required`: export the token before running deploy (`export GITHUB_TOKEN=...`).
+- `branch protection check forbidden`: ensure the token has `repo` admin scope or set `deploy.requireProtected=false`.
+- `branch does not have protection enabled`: add a legacy branch protection rule or disable the check if you rely solely on rulesets.
+- `workspace has uncommitted changes`: commit/stash or rerun with `--yes`.
+
+## Future Enhancements
+- Git helpers (`ro git ...`), docker tagging parity with CI, docs automation, and scaffolding commands are on deck per the implementation plan.

@@ -31,6 +31,13 @@ ro docker build [--tag <t>] [--push]
 ro docker compose up [--profile dev]
 ro docker compose down
 ```
+- Git helpers
+```
+ro git status
+ro git branch --verbose
+ro git rebase --onto origin/main
+ro git commit --type feat --summary "add feature"
+```
 - Deploy
 ```
 # requires GITHUB_TOKEN in env
