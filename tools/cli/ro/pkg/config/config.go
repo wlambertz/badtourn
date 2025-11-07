@@ -23,8 +23,12 @@ type Build struct {
 }
 
 type Docker struct {
-	Workflow  string `mapstructure:"workflow"`
-	ImageRepo string `mapstructure:"imageRepo"`
+	Workflow   string `mapstructure:"workflow"`
+	ImageRepo  string `mapstructure:"imageRepo"`
+	Registry   string `mapstructure:"registry"`
+	Context    string `mapstructure:"context"`
+	Dockerfile string `mapstructure:"dockerfile"`
+	ComposeFile string `mapstructure:"composeFile"`
 }
 
 type Deploy struct {
@@ -80,7 +84,11 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("build.mavenWrapper", "./mvnw")
 	v.SetDefault("build.defaultGoals", []string{"clean", "verify"})
 	v.SetDefault("docker.workflow", ".github/workflows/Tournamentmgmt-docker.yaml")
-	v.SetDefault("docker.imageRepo", "rallyon/tournamentmgmt")
+	v.SetDefault("docker.imageRepo", "wlambertz/tournamentmgmt")
+	v.SetDefault("docker.registry", "ghcr.io")
+	v.SetDefault("docker.context", "service/tournamentmgmt")
+	v.SetDefault("docker.dockerfile", "service/tournamentmgmt/Dockerfile")
+	v.SetDefault("docker.composeFile", "docker-compose.yml")
 	v.SetDefault("deploy.repo", "wlambertz/rallyon")
 	v.SetDefault("deploy.workflow", ".github/workflows/Tournamentmgmt-deploy.yaml")
 	v.SetDefault("deploy.defaultRef", "main")

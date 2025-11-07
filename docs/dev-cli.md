@@ -18,6 +18,8 @@ Add `bin/` to your `PATH` or call the binary directly (e.g., `./bin/ro --help`).
 - `project.*`, `paths.*`: repo layout.
 - `build.*`: Maven wrapper location and default goals.
 - `docker.*`: workflow reference + image repo (used by `ro docker`).
+  - `registry` (e.g., `ghcr.io`), `imageRepo` (owner/name), `context`, `dockerfile`.
+  - `composeFile`: default file for `docker compose` commands.
 - `deploy.*`:
   - `repo`, `workflow`: GitHub owner/repo + workflow file name.
   - `defaultRef`: branch used when no env-specific mapping exists.
@@ -32,8 +34,10 @@ Add `bin/` to your `PATH` or call the binary directly (e.g., `./bin/ro --help`).
 ro build [--fast|--ci]
 ro test
 ro run service tournamentmgmt [--env dev --port 8080]
-ro docker build [--tag <tag>] [--push]
-ro docker compose up|down [--profile dev]
+ro docker build --branch-tag --sha-tag --push
+ro docker build --tag release --latest
+ro docker compose up|down --profile dev
+ro docker compose logs api
 ro deploy --env dev --dry-run
 ro git status|branch|rebase|commit
 ```
@@ -70,3 +74,12 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 
 ## Future Enhancements
 - Git helpers (`ro git ...`), docker tagging parity with CI, docs automation, and scaffolding commands are on deck per the implementation plan.
+### Docker Workflow
+- `ro docker build`
+  - Tags mirror CI defaults: `--branch-tag` and `--sha-tag` (on by default) produce tags like `ghcr.io/org/app:main` and `ghcr.io/org/app:sha-1a2b3c4`.
+  - Add manual tags with `--tag <value>`; pass `--latest` to always stamp `:latest`.
+  - Use `--push` to push every generated tag after a successful build.
+- `ro docker compose`
+  - `--profile <name>` can be repeated to match your compose profiles.
+  - `--file` overrides the compose file (defaults to `docker.composeFile` in `ro.yaml`).
+  - Subcommands: `up`, `down`, `logs` (follows output, optionally for a specific service).

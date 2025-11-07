@@ -14,7 +14,11 @@ build:
 
 docker:
   workflow: .github/workflows/Tournamentmgmt-docker.yaml
-  imageRepo: rallyon/tournamentmgmt
+  imageRepo: wlambertz/tournamentmgmt
+  registry: ghcr.io
+  context: service/tournamentmgmt
+  dockerfile: service/tournamentmgmt/Dockerfile
+  composeFile: docker-compose.yml
 
 deploy:
   repo: wlambertz/rallyon
@@ -34,5 +38,4 @@ git:
 output:
   json: false
   verbose: false
-
 

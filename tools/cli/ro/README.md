@@ -3,6 +3,7 @@
 ## Build
 
 - Windows PowerShell
+
 ```
 cd tools/cli/ro
 go mod tidy
@@ -12,41 +13,56 @@ go build -o ..\..\..\bin\ro.exe .
 ## Usage
 
 - Show help
+
 ```
 ro --help
 ```
+
 - Config
+
 ```
 ro config show --json
 ```
+
 - Build / Test / Run
+
 ```
 ro build [--fast|--ci]
 ro test
 ro run service tournamentmgmt --env dev --port 8080
 ```
+
 - Docker
+
 ```
-ro docker build [--tag <t>] [--push]
-ro docker compose up [--profile dev]
-ro docker compose down
+ro docker build --branch-tag --sha-tag --push
+ro docker build --tag release --latest
+ro docker compose up --profile dev
+ro docker compose down --profile dev
+ro docker compose logs api
 ```
+
 - Git helpers
-```
+
+```shell
 ro git status
 ro git branch --verbose
 ro git rebase --onto origin/main
 ro git commit --type feat --summary "add feature"
 ```
+
 - Deploy
-```
+
+```shell
 # requires GITHUB_TOKEN in env
 ro deploy --env dev --dry-run   # safe preview
 ro deploy --env prod --yes      # skip prompt for automation
 ```
+
 - Deploy defaults live under `deploy.*` in `ro.yaml` (repo, workflow slug, ref mapping, safety gates). Override with `RO_DEPLOY_*` env vars when needed.
 - Docs
-```
+
+```shell
 ro docs generate  # writes docs/dev-cli.md
 ```
 
