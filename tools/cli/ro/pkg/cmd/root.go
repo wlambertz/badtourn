@@ -16,11 +16,12 @@ import (
 )
 
 var (
-	flagVerbose bool
-	flagJSON    bool
-	flagDryRun  bool
-	flagYes     bool
-	cfg         *config.Config
+	flagVerbose    bool
+	flagJSON       bool
+	flagDryRun     bool
+	flagYes        bool
+	flagQuiet      bool
+	cfg            *config.Config
 	currentCommand string
 )
 
@@ -31,7 +32,8 @@ var rootCmd = &cobra.Command{
 	Long:  "RallyOn developer CLI to streamline builds, tests, deployments, and common workflows.",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		// Initialize logging first
-		logger := logx.New(logx.Options{JSON: flagJSON, Verbose: flagVerbose})
+		quiet := flagQuiet || cfg.Output.Quiet
+		logger := logx.New(logx.Options{JSON: flagJSON, Verbose: flagVerbose && !quiet, Writer: os.Stdout, Quiet: quiet})
 		slog.SetDefault(logger)
 
 		// Bind flags to viper keys so they can override file/env
@@ -64,7 +66,10 @@ func Execute() error {
 	if telemetry.Enabled() {
 		cmdName := strings.TrimSpace(currentCommand)
 		if cmdName == "" {
-			cmdName = rootCmd.Use
+			cmdName = strings.Join(os.Args[1:], " ")
+			if cmdName == "" {
+				cmdName = rootCmd.Use
+			}
 		}
 		telemetry.Track(telemetry.Event{
 			Command:  cmdName,
@@ -84,6 +89,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&flagJSON, "json", false, "emit JSON-formatted output")
 	rootCmd.PersistentFlags().BoolVar(&flagDryRun, "dry-run", false, "show actions without executing")
 	rootCmd.PersistentFlags().BoolVar(&flagYes, "yes", false, "auto-confirm prompts and bypass interactive checks")
+	rootCmd.PersistentFlags().BoolVar(&flagQuiet, "quiet", false, "suppress info logs (errors only)")
 	// Ensure viper env prefix is active even if no config file exists
 	viper.SetEnvPrefix("RO")
 	viper.AutomaticEnv()
@@ -103,4 +109,11 @@ func exitCodeFromError(err error) int {
 		return 0
 	}
 	return 1
+}
+
+func logWriter(quiet bool) func([]byte) (int, error) {
+	if !quiet {
+		return nil
+	}
+	return nil
 }

@@ -60,3 +60,4 @@ git:
 output:
   json: false
   verbose: false
+  quiet: false

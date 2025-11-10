@@ -54,6 +54,7 @@ type Git struct {
 type Output struct {
 	JSON    bool `mapstructure:"json"`
 	Verbose bool `mapstructure:"verbose"`
+	Quiet   bool `mapstructure:"quiet"`
 }
 
 type Docs struct {
@@ -133,6 +134,7 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("git.defaultBranch", "main")
 	v.SetDefault("output.json", false)
 	v.SetDefault("output.verbose", false)
+	v.SetDefault("output.quiet", false)
 	v.SetDefault("docs.output", "docs/cli-reference.md")
 	v.SetDefault("docs.wikiOutput", "wiki/CLI.md")
 	v.SetDefault("docs.publishToWiki", false)
