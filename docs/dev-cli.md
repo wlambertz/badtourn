@@ -26,7 +26,10 @@ Add `bin/` to your `PATH` or call the binary directly (e.g., `./bin/ro --help`).
   - `envRefs`: map env → required branch (e.g., `prod: main`).
   - `requireClean`, `requireProtected`, `requireGreen`: safety gates before deployment.
   - `pollInterval`, `pollTimeout`: workflow polling cadence.
+  - `inputs`: default workflow inputs (merged with CLI `--input key=value` overrides).
+  - `defaultWait`: controls whether `ro deploy` waits for workflow completion unless `--wait` is provided.
 - `output.*`: default verbosity / JSON logging.
+- `docs.*`: `output`, `wikiOutput`, `publishToWiki` toggle for `ro docs generate`.
 - Override any value via `RO_<SECTION>_<FIELD>=...` (e.g., `RO_DEPLOY_REQUIREPROTECTED=false`).
 
 ## Core Commands
@@ -39,6 +42,8 @@ ro docker build --tag release --latest
 ro docker compose up|down --profile dev
 ro docker compose logs api
 ro deploy --env dev --dry-run
+ro deploy --env prod --yes --wait=false --input version=1.2.3
+ro deploy --env dev --check-only --json
 ro git status|branch|rebase|commit
 ```
 Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-run` is supported by destructive commands, and `--yes` skips confirmation prompts.
@@ -57,14 +62,17 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 3. Run:
    ```bash
    ro deploy --env dev --dry-run   # preview
-   ro deploy --env prod --yes      # confirmation bypass for CI
+   ro deploy --env prod --yes --wait=false --input release=1.2.3
+   ro deploy --env dev --check-only --json  # CI preflight without dispatching
    ```
 4. The CLI enforces:
    - Clean git status unless `--yes`.
    - Branch matches `deploy.envRefs[env]` (can be overridden with `--yes`).
    - Branch protection check (`deploy.requireProtected`) via GitHub’s REST API. Disable via config if you use only modern rulesets.
    - Latest commit status is green (`deploy.requireGreen`).
-5. On success, it dispatches the configured GitHub Actions workflow and polls until completion, logging the run URL and conclusion.
+5. Add workflow inputs with `--input key=value`. Defaults come from `deploy.inputs`, plus `env`/`notes`. Later flags override earlier values.
+6. Use `--wait=false` (or set `deploy.defaultWait: false`) to dispatch asynchronously. Combine with `--json` for machine-readable logs, which emit `deploy-plan` and `deploy-result` events.
+7. `--check-only` runs every preflight without triggering the workflow (ideal for CI gating).
 
 ## Troubleshooting
 - `GITHUB_TOKEN env var is required`: export the token before running deploy (`export GITHUB_TOKEN=...`).
@@ -83,3 +91,8 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
   - `--profile <name>` can be repeated to match your compose profiles.
   - `--file` overrides the compose file (defaults to `docker.composeFile` in `ro.yaml`).
   - Subcommands: `up`, `down`, `logs` (follows output, optionally for a specific service).
+
+## CLI Reference Generation
+- `ro docs generate` emits a full command reference at `docs/cli-reference.md`.
+- Pass `--wiki` (or set `docs.publishToWiki: true`) to mirror the output into `wiki/CLI.md`; remember to commit the wiki submodule separately.
+- Add `--output <path>` or `--wiki-output <path>` to override the targets when needed.

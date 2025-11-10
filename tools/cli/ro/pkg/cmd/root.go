@@ -44,6 +44,7 @@ var rootCmd = &cobra.Command{
 			slog.SetDefault(logx.New(logx.Options{JSON: cfg.Output.JSON, Verbose: cfg.Output.Verbose}))
 		}
 		flagYes = viper.GetBool("yes")
+		deployDefaultWait = cfg.Deploy.DefaultWait
 		return nil
 	},
 }

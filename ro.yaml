@@ -20,6 +20,11 @@ docker:
   dockerfile: service/tournamentmgmt/Dockerfile
   composeFile: docker-compose.yml
 
+docs:
+  output: docs/cli-reference.md
+  wikiOutput: wiki/CLI.md
+  publishToWiki: false
+
 deploy:
   repo: wlambertz/rallyon
   workflow: .github/workflows/Tournamentmgmt-deploy.yaml
@@ -31,6 +36,8 @@ deploy:
   requireGreen: true
   pollInterval: 15s
   pollTimeout: 10m
+  inputs: {}
+  defaultWait: true
 
 git:
   conventionalCommits: true
@@ -38,4 +45,3 @@ git:
 output:
   json: false
   verbose: false
-

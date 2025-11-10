@@ -56,14 +56,15 @@ ro git commit --type feat --summary "add feature"
 ```shell
 # requires GITHUB_TOKEN in env
 ro deploy --env dev --dry-run   # safe preview
-ro deploy --env prod --yes      # skip prompt for automation
+ro deploy --env prod --yes --wait=false --input release=1.2.3
+ro deploy --env dev --check-only --json  # CI preflight
 ```
 
 - Deploy defaults live under `deploy.*` in `ro.yaml` (repo, workflow slug, ref mapping, safety gates). Override with `RO_DEPLOY_*` env vars when needed.
 - Docs
 
 ```shell
-ro docs generate  # writes docs/dev-cli.md
+ro docs generate --wiki  # writes docs/cli-reference.md (+ wiki/CLI.md when --wiki)
 ```
 
 ## Shell completion

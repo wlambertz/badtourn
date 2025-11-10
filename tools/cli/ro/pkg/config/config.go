@@ -41,6 +41,8 @@ type Deploy struct {
 	RequireGreen     bool              `mapstructure:"requireGreen"`
 	PollInterval     string            `mapstructure:"pollInterval"`
 	PollTimeout      string            `mapstructure:"pollTimeout"`
+	Inputs           map[string]string `mapstructure:"inputs"`
+	DefaultWait      bool              `mapstructure:"defaultWait"`
 }
 
 type Git struct {
@@ -50,6 +52,12 @@ type Git struct {
 type Output struct {
 	JSON    bool `mapstructure:"json"`
 	Verbose bool `mapstructure:"verbose"`
+}
+
+type Docs struct {
+	Output       string `mapstructure:"output"`
+	WikiOutput   string `mapstructure:"wikiOutput"`
+	PublishToWiki bool  `mapstructure:"publishToWiki"`
 }
 
 type Project struct {
@@ -65,6 +73,7 @@ type Config struct {
 	Deploy  Deploy  `mapstructure:"deploy"`
 	Git     Git     `mapstructure:"git"`
 	Output  Output  `mapstructure:"output"`
+	Docs    Docs    `mapstructure:"docs"`
 }
 
 // Load merges configuration from ro.yaml, environment, and provides accessors.
@@ -98,9 +107,14 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("deploy.requireGreen", true)
 	v.SetDefault("deploy.pollInterval", "15s")
 	v.SetDefault("deploy.pollTimeout", "10m")
+	v.SetDefault("deploy.inputs", map[string]string{})
+	v.SetDefault("deploy.defaultWait", true)
 	v.SetDefault("git.conventionalCommits", true)
 	v.SetDefault("output.json", false)
 	v.SetDefault("output.verbose", false)
+	v.SetDefault("docs.output", "docs/cli-reference.md")
+	v.SetDefault("docs.wikiOutput", "wiki/CLI.md")
+	v.SetDefault("docs.publishToWiki", false)
 
 	// Config file from repo root if provided, else perform upward search from CWD
 	if repoRoot == "" {

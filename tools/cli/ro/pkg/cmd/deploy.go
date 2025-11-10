@@ -26,8 +26,12 @@ const (
 )
 
 var (
-	flagDeployEnv   string
-	flagDeployNotes string
+	flagDeployEnv       string
+	flagDeployNotes     string
+	flagDeployInputs    []string
+	flagDeployWait      bool
+	flagDeployCheckOnly bool
+	deployDefaultWait   = true
 )
 
 type workflowDispatch struct {
@@ -61,6 +65,27 @@ type deployContext struct {
 	PollInterval time.Duration
 	PollTimeout  time.Duration
 	StartedAt    time.Time
+	Inputs       map[string]string
+	Wait         bool
+}
+
+type deploySummary struct {
+	Env     string            `json:"env"`
+	Branch  string            `json:"branch"`
+	Ref     string            `json:"ref"`
+	SHA     string            `json:"sha"`
+	Inputs  map[string]string `json:"inputs"`
+	Notes   string            `json:"notes,omitempty"`
+	Wait    bool              `json:"wait"`
+	DryRun  bool              `json:"dryRun"`
+	Command string            `json:"command"`
+}
+
+type deployResult struct {
+	RunID      int64  `json:"runId,omitempty"`
+	Status     string `json:"status"`
+	Conclusion string `json:"conclusion,omitempty"`
+	URL        string `json:"url,omitempty"`
 }
 
 type githubClient struct {
@@ -87,22 +112,16 @@ var deployCmd = &cobra.Command{
 		}
 
 		gh := newGitHubClient(token)
-		plan, err := buildDeployContext(ctx, gh)
+		plan, summary, err := buildDeployPlan(cmd, ctx, gh)
 		if err != nil {
 			return err
 		}
+		logDeploySummary(summary)
 
-		slog.Info("deploy plan",
-			"env", plan.Env,
-			"ref", plan.Ref,
-			"branch", plan.Branch,
-			"sha", plan.SHA,
-			"workflow", plan.WorkflowSlug,
-			"dryRun", flagDryRun,
-			"yes", flagYes,
-		)
-
-		if flagDryRun {
+		if flagDryRun || flagDeployCheckOnly {
+			if flagDeployCheckOnly && !flagJSON {
+				slog.Info("deploy check completed")
+			}
 			return nil
 		}
 
@@ -118,14 +137,25 @@ var deployCmd = &cobra.Command{
 		if err := dispatchWorkflow(ctx, gh, plan); err != nil {
 			return err
 		}
-		slog.Info("deploy dispatched", "workflow", plan.WorkflowSlug, "env", plan.Env)
+		if !plan.Wait {
+			logDeployResult(deployResult{
+				Status: "dispatched",
+				URL:    "",
+			})
+			return nil
+		}
 
 		run, err := awaitWorkflow(ctx, gh, plan)
 		if err != nil {
 			return err
 		}
-
-		slog.Info("deploy result", "status", run.Status, "conclusion", run.Conclusion, "url", run.HTMLURL)
+		result := deployResult{
+			RunID:      run.ID,
+			Status:     run.Status,
+			Conclusion: run.Conclusion,
+			URL:        run.HTMLURL,
+		}
+		logDeployResult(result)
 		if strings.EqualFold(run.Conclusion, "success") {
 			return nil
 		}
@@ -136,6 +166,9 @@ var deployCmd = &cobra.Command{
 func init() {
 	deployCmd.Flags().StringVar(&flagDeployEnv, "env", "dev", "deployment environment (e.g., dev, prod)")
 	deployCmd.Flags().StringVar(&flagDeployNotes, "notes", "", "optional notes for the deployment")
+	deployCmd.Flags().StringSliceVar(&flagDeployInputs, "input", nil, "additional workflow input (key=value, repeatable)")
+	deployCmd.Flags().BoolVar(&flagDeployWait, "wait", true, "wait for workflow completion (overrides deploy.defaultWait)")
+	deployCmd.Flags().BoolVar(&flagDeployCheckOnly, "check-only", false, "run preflight checks without triggering workflow")
 	rootCmd.AddCommand(deployCmd)
 }
 
@@ -227,14 +260,39 @@ func buildDeployContext(ctx context.Context, gh *githubClient) (*deployContext, 
 	return plan, nil
 }
 
+func buildDeployPlan(cmd *cobra.Command, ctx context.Context, gh *githubClient) (*deployContext, deploySummary, error) {
+	plan, err := buildDeployContext(ctx, gh)
+	if err != nil {
+		return nil, deploySummary{}, err
+	}
+	wait := deployDefaultWait
+	if cmd.Flags().Changed("wait") {
+		wait = flagDeployWait
+	}
+	plan.Wait = wait
+	inputs, err := buildWorkflowInputs(plan)
+	if err != nil {
+		return nil, deploySummary{}, err
+	}
+	plan.Inputs = inputs
+	summary := deploySummary{
+		Env:     plan.Env,
+		Branch:  plan.Branch,
+		Ref:     plan.Ref,
+		SHA:     plan.SHA,
+		Inputs:  plan.Inputs,
+		Notes:   plan.Notes,
+		Wait:    plan.Wait,
+		DryRun:  flagDryRun || flagDeployCheckOnly,
+		Command: cmd.CommandPath(),
+	}
+	return plan, summary, nil
+}
+
 func dispatchWorkflow(ctx context.Context, gh *githubClient, plan *deployContext) error {
 	workflowSlug := url.PathEscape(plan.WorkflowSlug)
 	endpoint := gh.url(fmt.Sprintf("/repos/%s/actions/workflows/%s/dispatches", plan.Repo, workflowSlug))
-	inputs := map[string]string{"env": plan.Env}
-	if plan.Notes != "" {
-		inputs["notes"] = plan.Notes
-	}
-	payload, err := json.Marshal(workflowDispatch{Ref: plan.Ref, Inputs: inputs})
+	payload, err := json.Marshal(workflowDispatch{Ref: plan.Ref, Inputs: plan.Inputs})
 	if err != nil {
 		return err
 	}
@@ -317,7 +375,7 @@ func ensureBranchProtection(ctx context.Context, gh *githubClient, repo string, 
 	case http.StatusOK:
 		return nil
 	case http.StatusNotFound:
-		return fmt.Errorf("branch %s does not have protection enabled; update settings or disable deploy.requireProtected", ref)
+		return fmt.Errorf("branch %s does not have legacy protection enabled; add a classic branch protection rule or set deploy.requireProtected=false if using rulesets", ref)
 	case http.StatusForbidden:
 		msg, _ := io.ReadAll(io.LimitReader(resp.Body, 2048))
 		return fmt.Errorf("branch protection check forbidden: ensure the token has repo scope (%s)", strings.TrimSpace(string(msg)))
@@ -453,3 +511,68 @@ var (
 	gitStatusFn   = gitStatus
 	gitRevParseFn = gitRevParse
 )
+
+func buildWorkflowInputs(plan *deployContext) (map[string]string, error) {
+	inputs := make(map[string]string)
+	for k, v := range cfg.Deploy.Inputs {
+		inputs[k] = v
+	}
+	inputs["env"] = plan.Env
+	if plan.Notes != "" {
+		inputs["notes"] = plan.Notes
+	}
+	for _, override := range flagDeployInputs {
+		key, value, err := parseInputKV(override)
+		if err != nil {
+			return nil, err
+		}
+		inputs[key] = value
+	}
+	return inputs, nil
+}
+
+func parseInputKV(value string) (string, string, error) {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return "", "", errors.New("input overrides must not be empty")
+	}
+	parts := strings.SplitN(value, "=", 2)
+	if len(parts) != 2 || strings.TrimSpace(parts[0]) == "" {
+		return "", "", fmt.Errorf("invalid input override %q (expected key=value)", value)
+	}
+	return strings.TrimSpace(parts[0]), strings.TrimSpace(parts[1]), nil
+}
+
+func logDeploySummary(summary deploySummary) {
+	if flagJSON {
+		emitJSONEvent("deploy-plan", summary)
+		return
+	}
+	slog.Info("deploy plan",
+		"env", summary.Env,
+		"branch", summary.Branch,
+		"ref", summary.Ref,
+		"sha", summary.SHA,
+		"wait", summary.Wait,
+		"dryRun", summary.DryRun,
+		"inputs", summary.Inputs,
+	)
+}
+
+func logDeployResult(result deployResult) {
+	if flagJSON {
+		emitJSONEvent("deploy-result", result)
+		return
+	}
+	slog.Info("deploy result", "status", result.Status, "conclusion", result.Conclusion, "url", result.URL, "runId", result.RunID)
+}
+
+func emitJSONEvent(event string, payload any) {
+	obj := map[string]any{
+		"event": event,
+		"time":  time.Now().Format(time.RFC3339),
+		"data":  payload,
+	}
+	enc := json.NewEncoder(os.Stdout)
+	_ = enc.Encode(obj)
+}
