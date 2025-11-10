@@ -1,0 +1,14 @@
+package {{ .Package }}.api;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+class {{ .ModuleName }}ControllerTest {
+
+    @Test
+    void healthReturnsMessage() {
+        {{ .ModuleName }}Controller controller = new {{ .ModuleName }}Controller(new {{ .Package }}.application.{{ .ModuleName }}Service());
+        assertThat(controller.health()).contains("alive");
+    }
+}

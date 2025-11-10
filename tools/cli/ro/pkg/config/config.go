@@ -60,6 +60,14 @@ type Docs struct {
 	Output       string `mapstructure:"output"`
 	WikiOutput   string `mapstructure:"wikiOutput"`
 	PublishToWiki bool  `mapstructure:"publishToWiki"`
+	AutoStageWiki bool  `mapstructure:"autoStageWiki"`
+	WikiCommitMessage string `mapstructure:"wikiCommitMessage"`
+}
+
+type Scaffold struct {
+	TemplateDir string `mapstructure:"templateDir"`
+	DefaultPackage string `mapstructure:"defaultPackage"`
+	BasePath string `mapstructure:"basePath"`
 }
 
 type Project struct {
@@ -76,6 +84,7 @@ type Config struct {
 	Git     Git     `mapstructure:"git"`
 	Output  Output  `mapstructure:"output"`
 	Docs    Docs    `mapstructure:"docs"`
+	Scaffold Scaffold `mapstructure:"scaffold"`
 }
 
 // Load merges configuration from ro.yaml, environment, and provides accessors.
@@ -119,6 +128,11 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("docs.output", "docs/cli-reference.md")
 	v.SetDefault("docs.wikiOutput", "wiki/CLI.md")
 	v.SetDefault("docs.publishToWiki", false)
+	v.SetDefault("docs.autoStageWiki", false)
+	v.SetDefault("docs.wikiCommitMessage", "docs: update CLI reference")
+	v.SetDefault("scaffold.templateDir", "tools/cli/ro/templates")
+	v.SetDefault("scaffold.defaultPackage", "com.rallyon.tournament")
+	v.SetDefault("scaffold.basePath", "service/tournamentmgmt/src")
 
 	// Config file from repo root if provided, else perform upward search from CWD
 	if repoRoot == "" {

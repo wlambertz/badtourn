@@ -100,6 +100,7 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 - `ro docs generate` emits a full command reference at `docs/cli-reference.md`.
 - Pass `--wiki` (or set `docs.publishToWiki: true`) to mirror the output into `wiki/CLI.md`; remember to commit the wiki submodule separately.
 - Add `--output <path>` or `--wiki-output <path>` to override the targets when needed.
+- `--commit-wiki` stages and commits the wiki update automatically (use `--commit-message` or `docs.wikiCommitMessage` for the commit text). Combine with `--dry-run` to preview.
 
 ## Packaging & Releases
 - Local snapshot build:
@@ -119,4 +120,6 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
   ro scaffold module registration
   ro scaffold module payments --package com.rallyon.tournament.payments
   ro scaffold module scoring --dry-run
+  ro scaffold module messaging --template-set adapter --force
   ```
+  - Template sets live in `tools/cli/ro/templates/<set>` (default `module`). Customize by adding your own `files.json` + `.tmpl` files.

@@ -25,6 +25,11 @@ docs:
   wikiOutput: wiki/CLI.md
   publishToWiki: false
 
+scaffold:
+  templateDir: tools/cli/ro/templates
+  defaultPackage: com.rallyon.tournament
+  basePath: service/tournamentmgmt/src
+
 deploy:
   repo: wlambertz/rallyon
   workflow: .github/workflows/Tournamentmgmt-deploy.yaml

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -21,15 +22,20 @@ var docsCmd = &cobra.Command{
 }
 
 var (
-	flagDocsOutput   string
-	flagDocsWiki     bool
-	flagDocsWikiPath string
+	flagDocsOutput    string
+	flagDocsWiki      bool
+	flagDocsWikiPath  string
+	flagDocsCommitMsg string
+	flagDocsPublish   bool
 )
 
 var docsGenerateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate CLI reference markdown",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if flagDocsPublish {
+			flagDocsWiki = true
+		}
 		if cfg == nil {
 			return fmt.Errorf("configuration not loaded")
 		}
@@ -50,6 +56,20 @@ var docsGenerateCmd = &cobra.Command{
 				return err
 			}
 			slog.Info("docs written to wiki; remember to commit wiki submodule", "path", wikiPath)
+			if cfg.Docs.AutoStageWiki || flagDocsPublish {
+				if err := stageWikiFile(wikiPath); err != nil {
+					return err
+				}
+			}
+			if flagDocsPublish {
+				message := flagDocsCommitMsg
+				if message == "" {
+					message = cfg.Docs.WikiCommitMessage
+				}
+				if err := commitWiki(message); err != nil {
+					return err
+				}
+			}
 		}
 		return nil
 	},
@@ -59,6 +79,8 @@ func init() {
 	docsGenerateCmd.Flags().StringVar(&flagDocsOutput, "output", "", "file to write (defaults to docs.output)")
 	docsGenerateCmd.Flags().BoolVar(&flagDocsWiki, "wiki", false, "also write to wiki docs file")
 	docsGenerateCmd.Flags().StringVar(&flagDocsWikiPath, "wiki-output", "", "wiki docs path (defaults to docs.wikiOutput)")
+	docsGenerateCmd.Flags().StringVar(&flagDocsCommitMsg, "commit-message", "", "commit message when publishing to wiki (overrides docs.wikiCommitMessage)")
+	docsGenerateCmd.Flags().BoolVar(&flagDocsPublish, "commit-wiki", false, "commit wiki changes after generation")
 	docsCmd.AddCommand(docsGenerateCmd)
 	rootCmd.AddCommand(docsCmd)
 }
@@ -85,6 +107,28 @@ func renderDocs(root *cobra.Command) (string, error) {
 		writeCommandSection(&buf, c)
 	}
 	return buf.String(), nil
+}
+
+func stageWikiFile(path string) error {
+	wikiDir, file := filepath.Split(path)
+	if wikiDir == "" {
+		wikiDir = "wiki"
+	}
+	if err := runGitCommand(context.Background(), []string{"git", "-C", wikiDir, "add", file}); err != nil {
+		return fmt.Errorf("stage wiki file: %w", err)
+	}
+	slog.Info("wiki staged", "file", path)
+	return nil
+}
+
+func commitWiki(message string) error {
+	wikiDir := filepath.Join(cfg.Project.Root, "wiki")
+	args := []string{"git", "-C", wikiDir, "commit", "-m", message}
+	if err := runGitCommand(context.Background(), args); err != nil {
+		return fmt.Errorf("commit wiki: %w", err)
+	}
+	slog.Info("wiki committed", "message", message)
+	return nil
 }
 
 func collectCommands(root *cobra.Command) []*cobra.Command {

@@ -66,7 +66,9 @@ ro deploy --env dev --check-only --json  # CI preflight
 - Docs
 
 ```shell
-ro docs generate --wiki  # writes docs/cli-reference.md (+ wiki/CLI.md when --wiki)
+ro docs generate --wiki                     # writes docs/cli-reference.md (+ wiki/CLI.md)
+ro docs generate --wiki --commit-wiki       # also commits wiki (docs.wikiCommitMessage)
+ro docs generate --wiki --commit-wiki --commit-message "docs: refresh CLI"
 ```
 - Scaffold
 
@@ -74,6 +76,8 @@ ro docs generate --wiki  # writes docs/cli-reference.md (+ wiki/CLI.md when --wi
 ro scaffold module registration
 ro scaffold module scheduling --package com.rallyon.tournament.scheduling
 ro scaffold module scoring --dry-run
+ro scaffold module messaging --template-set adapter --force
+ro scaffold module catalog --template-set module --base service/tournamentmgmt/src/main/java
 ```
 - Version
 

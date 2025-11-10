@@ -1,6 +1,6 @@
 # RallyOn CLI Reference
 
-_Generated on 2025-11-10T10:04:03+01:00_
+_Generated on 2025-11-10T12:21:31+01:00_
 
 ## Table of Contents
 
@@ -25,11 +25,16 @@ _Generated on 2025-11-10T10:04:03+01:00_
 - [ro git](#ro-git)
 - [ro git branch](#ro-git-branch)
 - [ro git commit](#ro-git-commit)
+- [ro git push](#ro-git-push)
 - [ro git rebase](#ro-git-rebase)
 - [ro git status](#ro-git-status)
+- [ro git sync](#ro-git-sync)
 - [ro run](#ro-run)
 - [ro run service](#ro-run-service)
+- [ro scaffold](#ro-scaffold)
+- [ro scaffold module](#ro-scaffold-module)
 - [ro test](#ro-test)
+- [ro version](#ro-version)
 
 ## ro
 
@@ -469,10 +474,13 @@ ro docs generate [flags]
 **Flags**
 
 ```
--h, --help                 help for generate
-      --output string        file to write (defaults to docs.output)
-      --wiki                 also write to wiki docs file
-      --wiki-output string   wiki docs path (defaults to docs.wikiOutput)
+--commit-message string   commit message when publishing to wiki (overrides
+                                docs.wikiCommitMessage)
+      --commit-wiki             commit wiki changes after generation
+  -h, --help                    help for generate
+      --output string           file to write (defaults to docs.output)
+      --wiki                    also write to wiki docs file
+      --wiki-output string      wiki docs path (defaults to docs.wikiOutput)
 ```
 
 **Inherited Flags**
@@ -553,6 +561,31 @@ ro git commit [flags]
       --yes       auto-confirm prompts and bypass interactive checks
 ```
 
+## ro git push
+
+Push current branch to configured remote (with safeguards)
+
+```bash
+ro git push [flags]
+```
+
+**Flags**
+
+```
+--branch string   branch to push (defaults to current)
+      --force           use --force-with-lease
+      --remote string   remote name (defaults to git.defaultRemote)
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
 ## ro git rebase
 
 Pull with rebase against the specified upstream
@@ -589,6 +622,31 @@ ro git status [flags]
 
 ```
 --long   show long git status output
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro git sync
+
+Fetch and rebase current branch onto upstream
+
+```bash
+ro git sync [flags]
+```
+
+**Flags**
+
+```
+--autostash       auto stash during rebase (default true)
+      --branch string   upstream branch (defaults to git.defaultBranch)
+      --remote string   upstream remote (defaults to git.defaultRemote)
 ```
 
 **Inherited Flags**
@@ -641,12 +699,70 @@ ro run service tournamentmgmt [flags]
       --yes       auto-confirm prompts and bypass interactive checks
 ```
 
+## ro scaffold
+
+Generate boilerplate for RallyOn modules
+
+```bash
+ro scaffold
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro scaffold module
+
+Create a Modulith slice skeleton (controller/service/domain/test)
+
+```bash
+ro scaffold module <name> [flags]
+```
+
+**Flags**
+
+```
+--base string      base path for Java sources (defaults to service module src/main/java)
+      --dry-run          preview files without writing
+      --package string   base Java package for the module
+```
+
+**Inherited Flags**
+
+```
+--json      emit JSON-formatted output
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
 ## ro test
 
 Run test suites
 
 ```bash
 ro test
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro version
+
+Show CLI version information
+
+```bash
+ro version
 ```
 
 **Inherited Flags**
