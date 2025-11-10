@@ -1,0 +1,48 @@
+project_name: ro
+
+builds:
+  - id: ro
+    main: ./
+    binary: ro
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/wlambertz/rallyon/tools/cli/ro/pkg/version.Version={{.Version}}
+      - -X github.com/wlambertz/rallyon/tools/cli/ro/pkg/version.Commit={{.Commit}}
+      - -X github.com/wlambertz/rallyon/tools/cli/ro/pkg/version.Date={{.Date}}
+    hooks:
+      pre:
+        - go test ./...
+
+archives:
+  - id: ro-archives
+    builds:
+      - ro
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - docs/cli-reference.md
+      - ro.yaml
+
+checksum:
+  name_template: "{{ .ProjectName }}_checksums.txt"
+
+changelog:
+  use: git
+
+release:
+  github:
+    owner: wlambertz
+    name: rallyon
+    draft: true
+

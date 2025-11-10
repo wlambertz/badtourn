@@ -66,6 +66,28 @@ ro deploy --env dev --check-only --json  # CI preflight
 ```shell
 ro docs generate --wiki  # writes docs/cli-reference.md (+ wiki/CLI.md when --wiki)
 ```
+- Scaffold
+
+```shell
+ro scaffold module registration
+ro scaffold module scheduling --package com.rallyon.tournament.scheduling
+ro scaffold module scoring --dry-run
+```
+- Version
+
+```shell
+ro version
+```
+
+- Packaging / Release
+
+```shell
+cd tools/cli/ro
+goreleaser build --snapshot --clean  # local multi-platform artifacts (dist/)
+goreleaser release --clean --skip=publish  # dry-run release
+```
+
+CI publishes tagged releases via `.github/workflows/ro-release.yml` (tags `ro/v*`).
 
 ## Shell completion
 

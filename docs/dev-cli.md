@@ -44,6 +44,8 @@ ro docker compose logs api
 ro deploy --env dev --dry-run
 ro deploy --env prod --yes --wait=false --input version=1.2.3
 ro deploy --env dev --check-only --json
+ro version
+ro scaffold module registration
 ro git status|branch|rebase|commit
 ```
 Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-run` is supported by destructive commands, and `--yes` skips confirmation prompts.
@@ -96,3 +98,23 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 - `ro docs generate` emits a full command reference at `docs/cli-reference.md`.
 - Pass `--wiki` (or set `docs.publishToWiki: true`) to mirror the output into `wiki/CLI.md`; remember to commit the wiki submodule separately.
 - Add `--output <path>` or `--wiki-output <path>` to override the targets when needed.
+
+## Packaging & Releases
+- Local snapshot build:
+  ```bash
+  cd tools/cli/ro
+  goreleaser build --snapshot --clean
+  ls dist/   # contains tar/zip per platform
+  ```
+- Dry-run release (no publish):
+  ```bash
+  goreleaser release --clean --skip=publish
+  ```
+- CI workflow `.github/workflows/ro-release.yml` runs on tags `ro/v*` and publishes multi-platform artifacts + checksums.
+- `ro version` prints `Version (Commit) Date`, populated via GoReleaser `ldflags`.
+- Scaffold modules (Modulith slice skeletons):
+  ```bash
+  ro scaffold module registration
+  ro scaffold module payments --package com.rallyon.tournament.payments
+  ro scaffold module scoring --dry-run
+  ```

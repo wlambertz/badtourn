@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/config"
 	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/logx"
+	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/version"
 )
 
 var (
@@ -67,4 +68,12 @@ func init() {
 	viper.SetEnvPrefix("RO")
 	viper.AutomaticEnv()
 	_ = viper.BindPFlag("yes", rootCmd.PersistentFlags().Lookup("yes"))
+
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "version",
+		Short: "Show CLI version information",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("ro %s (%s) %s\n", version.Version, version.Commit, version.Date)
+		},
+	})
 }
