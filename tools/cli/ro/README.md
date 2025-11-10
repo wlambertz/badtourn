@@ -84,6 +84,13 @@ ro scaffold module catalog --template-set module --base service/tournamentmgmt/s
 ```shell
 ro version
 ```
+- Telemetry / Diagnostics
+
+```shell
+ro telemetry status
+RO_TELEMETRY_ENABLED=true ro deploy --env dev  # one-off opt-in
+ro doctor   # checks Go/Java/Docker/Git state
+```
 
 - Packaging / Release
 

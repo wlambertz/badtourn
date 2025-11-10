@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/config"
 	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/logx"
+	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/telemetry"
 	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/version"
 )
 
@@ -18,6 +21,7 @@ var (
 	flagDryRun  bool
 	flagYes     bool
 	cfg         *config.Config
+	currentCommand string
 )
 
 // rootCmd is the base command for the CLI.
@@ -46,17 +50,33 @@ var rootCmd = &cobra.Command{
 		}
 		flagYes = viper.GetBool("yes")
 		deployDefaultWait = cfg.Deploy.DefaultWait
+		telemetry.Init(&cfg.Telemetry)
+		currentCommand = cmd.CommandPath()
 		return nil
 	},
 }
 
 // Execute runs the CLI.
 func Execute() error {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return err
+	start := time.Now()
+	err := rootCmd.Execute()
+	duration := time.Since(start)
+	if telemetry.Enabled() {
+		cmdName := strings.TrimSpace(currentCommand)
+		if cmdName == "" {
+			cmdName = rootCmd.Use
+		}
+		telemetry.Track(telemetry.Event{
+			Command:  cmdName,
+			Duration: duration,
+			ExitCode: exitCodeFromError(err),
+			Success:  err == nil,
+		})
 	}
-	return nil
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+	return err
 }
 
 func init() {
@@ -76,4 +96,11 @@ func init() {
 			fmt.Printf("ro %s (%s) %s\n", version.Version, version.Commit, version.Date)
 		},
 	})
+}
+
+func exitCodeFromError(err error) int {
+	if err == nil {
+		return 0
+	}
+	return 1
 }

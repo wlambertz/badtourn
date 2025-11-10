@@ -30,6 +30,16 @@ scaffold:
   defaultPackage: com.rallyon.tournament
   basePath: service/tournamentmgmt/src
 
+telemetry:
+  enabled: true
+  endpoint: ""
+  clientId: ""
+  collectCommands:
+    - deploy
+    - docker build
+    - docker compose
+    - scaffold module
+
 deploy:
   repo: wlambertz/rallyon
   workflow: .github/workflows/Tournamentmgmt-deploy.yaml

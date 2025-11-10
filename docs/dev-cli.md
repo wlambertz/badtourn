@@ -30,6 +30,7 @@ Add `bin/` to your `PATH` or call the binary directly (e.g., `./bin/ro --help`).
   - `defaultWait`: controls whether `ro deploy` waits for workflow completion unless `--wait` is provided.
 - `output.*`: default verbosity / JSON logging.
 - `docs.*`: `output`, `wikiOutput`, `publishToWiki` toggle for `ro docs generate`.
+- `telemetry.*`: `enabled`, `endpoint`, `clientId`, `collectCommands`. Use `RO_TELEMETRY_ENABLED=true` to opt in without editing the file.
 - Override any value via `RO_<SECTION>_<FIELD>=...` (e.g., `RO_DEPLOY_REQUIREPROTECTED=false`).
 
 ## Core Commands
@@ -59,6 +60,8 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
   - Use `--body`/`--breaking-notes` to supply additional paragraphs.
 - `ro git push` – pushes current branch with clean-tree enforcement; add `--force` for `--force-with-lease`.
 - `ro git sync` – fetch + rebase onto configured upstream; `--remote`/`--branch` override defaults, `--autostash=false` to keep changes intact.
+- `ro doctor` – runs environment diagnostics (Go, Maven wrapper, Docker, Git cleanliness).
+- `ro telemetry status|enable|disable` – inspect or update telemetry configuration. Opt in via `RO_TELEMETRY_ENABLED=true` and set `telemetry.endpoint`/`clientId`. Events capture command, duration, exit code only.
 
 ## Deploy Workflow
 1. Set `GITHUB_TOKEN` (PAT with `repo` + `workflow` scopes) in your shell or secret store.

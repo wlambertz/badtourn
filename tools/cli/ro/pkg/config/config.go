@@ -70,6 +70,13 @@ type Scaffold struct {
 	BasePath string `mapstructure:"basePath"`
 }
 
+type Telemetry struct {
+	Enabled bool `mapstructure:"enabled"`
+	Endpoint string `mapstructure:"endpoint"`
+	ClientID string `mapstructure:"clientId"`
+	CollectCommands []string `mapstructure:"collectCommands"`
+}
+
 type Project struct {
 	Name string `mapstructure:"name"`
 	Root string `mapstructure:"root"`
@@ -85,6 +92,7 @@ type Config struct {
 	Output  Output  `mapstructure:"output"`
 	Docs    Docs    `mapstructure:"docs"`
 	Scaffold Scaffold `mapstructure:"scaffold"`
+	Telemetry Telemetry `mapstructure:"telemetry"`
 }
 
 // Load merges configuration from ro.yaml, environment, and provides accessors.
@@ -133,6 +141,10 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("scaffold.templateDir", "tools/cli/ro/templates")
 	v.SetDefault("scaffold.defaultPackage", "com.rallyon.tournament")
 	v.SetDefault("scaffold.basePath", "service/tournamentmgmt/src")
+	v.SetDefault("telemetry.enabled", false)
+	v.SetDefault("telemetry.endpoint", "")
+	v.SetDefault("telemetry.clientId", "")
+	v.SetDefault("telemetry.collectCommands", []string{"deploy", "docker build", "docker compose", "scaffold module"})
 
 	// Config file from repo root if provided, else perform upward search from CWD
 	if repoRoot == "" {
