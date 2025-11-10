@@ -57,6 +57,8 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 - `ro git commit` – guides a Conventional Commit (prompts for type/scope/summary, supports `--breaking`, `--wip`, `--all` to stage tracked files).
   - Preview shown before committing; `--yes` bypasses the confirmation prompt.
   - Use `--body`/`--breaking-notes` to supply additional paragraphs.
+- `ro git push` – pushes current branch with clean-tree enforcement; add `--force` for `--force-with-lease`.
+- `ro git sync` – fetch + rebase onto configured upstream; `--remote`/`--branch` override defaults, `--autostash=false` to keep changes intact.
 
 ## Deploy Workflow
 1. Set `GITHUB_TOKEN` (PAT with `repo` + `workflow` scopes) in your shell or secret store.

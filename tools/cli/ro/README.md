@@ -49,6 +49,8 @@ ro git status
 ro git branch --verbose
 ro git rebase --onto origin/main
 ro git commit --type feat --summary "add feature"
+ro git push --force
+ro git sync --remote origin --branch main
 ```
 
 - Deploy

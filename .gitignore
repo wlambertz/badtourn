@@ -54,3 +54,5 @@ build/
 # Go build caches
 tools/cli/ro/.gocache/
 tools/cli/ro/dist/
+bin/
+tools/bin/

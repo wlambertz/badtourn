@@ -99,6 +99,8 @@ func init() {
 	gitCmd.AddCommand(gitBranchCmd)
 	gitCmd.AddCommand(gitRebaseCmd)
 	gitCmd.AddCommand(gitCommitCmd)
+	gitCmd.AddCommand(newGitPushCmd())
+	gitCmd.AddCommand(newGitSyncCmd())
 	rootCmd.AddCommand(gitCmd)
 }
 
@@ -205,6 +207,102 @@ func runGitCommit(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+func newGitPushCmd() *cobra.Command {
+	var (
+		flagPushForce  bool
+		flagPushRemote string
+		flagPushBranch string
+	)
+	cmd := &cobra.Command{
+		Use:   "push",
+		Short: "Push current branch to configured remote (with safeguards)",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if cfg == nil {
+				return errors.New("configuration not loaded")
+			}
+			ctx := cmd.Context()
+			if ctx == nil {
+				ctx = context.Background()
+			}
+			if err := ensureCleanWorktree(ctx); err != nil {
+				return err
+			}
+			remote := flagPushRemote
+			if remote == "" {
+				remote = cfg.Git.DefaultRemote
+			}
+			branch := flagPushBranch
+			if branch == "" {
+				var err error
+				branch, err = gitRevParseFn(ctx, "--abbrev-ref", "HEAD")
+				if err != nil {
+					return err
+				}
+			}
+			if branch == "" {
+				return errors.New("could not determine current branch")
+			}
+			if flagPushForce && !flagYes {
+				if !prompt.Confirm(fmt.Sprintf("Force push %s to %s?", branch, remote), false) {
+					return nil
+				}
+			}
+			gitArgs := []string{"git", "push", remote, branch}
+			if flagPushForce {
+				gitArgs = append(gitArgs, "--force-with-lease")
+			}
+			slog.Info("git push", "remote", remote, "branch", branch, "force", flagPushForce)
+			return runGitCommand(ctx, gitArgs)
+		},
+	}
+	cmd.Flags().BoolVar(&flagPushForce, "force", false, "use --force-with-lease")
+	cmd.Flags().StringVar(&flagPushRemote, "remote", "", "remote name (defaults to git.defaultRemote)")
+	cmd.Flags().StringVar(&flagPushBranch, "branch", "", "branch to push (defaults to current)")
+	return cmd
+}
+
+func newGitSyncCmd() *cobra.Command {
+	var flagSyncRemote string
+	var flagSyncBranch string
+	var flagSyncAutostash bool
+	cmd := &cobra.Command{
+		Use:   "sync",
+		Short: "Fetch and rebase current branch onto upstream",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if cfg == nil {
+				return errors.New("configuration not loaded")
+			}
+			ctx := cmd.Context()
+			if ctx == nil {
+				ctx = context.Background()
+			}
+			remote := flagSyncRemote
+			if remote == "" {
+				remote = cfg.Git.DefaultRemote
+			}
+			branch := flagSyncBranch
+			if branch == "" {
+				branch = cfg.Git.DefaultBranch
+			}
+			fetchArgs := []string{"git", "fetch", remote, branch}
+			if err := runGitCommand(ctx, fetchArgs); err != nil {
+				return err
+			}
+			pullArgs := []string{"git", "pull", "--rebase"}
+			if flagSyncAutostash {
+				pullArgs = append(pullArgs, "--autostash")
+			}
+			pullArgs = append(pullArgs, remote, branch)
+			slog.Info("git sync", "remote", remote, "branch", branch, "autostash", flagSyncAutostash)
+			return runGitCommand(ctx, pullArgs)
+		},
+	}
+	cmd.Flags().StringVar(&flagSyncRemote, "remote", "", "upstream remote (defaults to git.defaultRemote)")
+	cmd.Flags().StringVar(&flagSyncBranch, "branch", "", "upstream branch (defaults to git.defaultBranch)")
+	cmd.Flags().BoolVar(&flagSyncAutostash, "autostash", true, "auto stash during rebase")
+	return cmd
+}
+
 func promptForCommit(in *commitInputs) error {
 	conventionalTypes := []string{"feat", "fix", "chore", "docs", "refactor", "test", "build", "ci", "perf", "style"}
 
@@ -300,4 +398,19 @@ func ensureStagedChanges(ctx context.Context) error {
 		return errors.New("no staged changes detected (use git add ... or run with --all)")
 	}
 	return nil
+}
+
+func ensureCleanWorktree(ctx context.Context) error {
+	status, err := gitStatusFn(ctx)
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(status) == "" {
+		return nil
+	}
+	if flagYes {
+		slog.Warn("working tree has uncommitted changes; continuing due to --yes")
+		return nil
+	}
+	return errors.New("working tree has uncommitted changes; commit/stash or use --yes to override")
 }

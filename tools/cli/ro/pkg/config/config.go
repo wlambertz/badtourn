@@ -47,6 +47,8 @@ type Deploy struct {
 
 type Git struct {
 	ConventionalCommits bool `mapstructure:"conventionalCommits"`
+	DefaultRemote        string `mapstructure:"defaultRemote"`
+	DefaultBranch        string `mapstructure:"defaultBranch"`
 }
 
 type Output struct {
@@ -110,6 +112,8 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("deploy.inputs", map[string]string{})
 	v.SetDefault("deploy.defaultWait", true)
 	v.SetDefault("git.conventionalCommits", true)
+	v.SetDefault("git.defaultRemote", "origin")
+	v.SetDefault("git.defaultBranch", "main")
 	v.SetDefault("output.json", false)
 	v.SetDefault("output.verbose", false)
 	v.SetDefault("docs.output", "docs/cli-reference.md")
