@@ -116,13 +116,13 @@ source <(ro completion bash)
 
 To load completions for every new session, execute once:
 
-#### Linux (bash):
+### Linux (bash)
 
 ```bash
 ro completion bash > /etc/bash_completion.d/ro
 ```
 
-#### macOS (bash):
+### macOS (bash)
 
 ```bash
 ro completion bash > $(brew --prefix)/etc/bash_completion.d/ro
@@ -157,11 +157,15 @@ Generate the autocompletion script for the fish shell.
 
 To load completions in your current shell session:
 
-	ro completion fish | source
+```bash
+ro completion fish | source
+```
 
 To load completions for every new session, execute once:
 
-	ro completion fish > ~/.config/fish/completions/ro.fish
+```bash
+ro completion fish > ~/.config/fish/completions/ro.fish
+```
 
 You will need to start a new shell for this setup to take effect.
 
@@ -192,7 +196,9 @@ Generate the autocompletion script for powershell.
 
 To load completions in your current shell session:
 
-	ro completion powershell | Out-String | Invoke-Expression
+```powershell
+ro completion powershell | Out-String | Invoke-Expression
+```
 
 To load completions for every new session, add the output of the above command
 to your powershell profile.
@@ -225,21 +231,29 @@ Generate the autocompletion script for the zsh shell.
 If shell completion is not already enabled in your environment you will need
 to enable it.  You can execute the following once:
 
-	echo "autoload -U compinit; compinit" >> ~/.zshrc
+```bash
+echo "autoload -U compinit; compinit" >> ~/.zshrc
+```
 
 To load completions in your current shell session:
 
-	source <(ro completion zsh)
+```bash
+source <(ro completion zsh)
+```
 
 To load completions for every new session, execute once:
 
-#### Linux (zsh):
+### Linux (zsh)
 
-	ro completion zsh > "${fpath[1]}/_ro"
+```bash
+ro completion zsh > "${fpath[1]}/_ro"
+```
 
-#### macOS (zsh):
+### macOS (zsh)
 
-	ro completion zsh > $(brew --prefix)/share/zsh/site-functions/_ro
+```bash
+ro completion zsh > $(brew --prefix)/share/zsh/site-functions/_ro
+```
 
 You will need to start a new shell for this setup to take effect.
 
@@ -779,4 +793,3 @@ ro version
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
-
