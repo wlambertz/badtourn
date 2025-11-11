@@ -5,9 +5,19 @@
 - Windows PowerShell
 
 ```PowerShell
-cd tools/cli/ro
+cd tools\cli\ro
+New-Item -ItemType Directory -Force ..\..\bin | Out-Null
 go mod tidy
-go build -o ..\..\..\bin\ro.exe .
+go build -o ..\..\bin\ro.exe .  # -o sets output path, trailing dot builds current module
+```
+
+- WSL (Ubuntu/Debian)
+
+```bash
+cd /mnt/c/Users/wla_edu/Documents/GitHub/rallyon/tools/cli/ro
+mkdir -p ../../bin
+go mod tidy
+go build -o ../../bin/ro .  # -o sets output path, trailing dot builds current module
 ```
 
 ## Usage
