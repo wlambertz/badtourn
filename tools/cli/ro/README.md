@@ -4,7 +4,7 @@
 
 - Windows PowerShell
 
-```
+```PowerShell
 cd tools/cli/ro
 go mod tidy
 go build -o ..\..\..\bin\ro.exe .
@@ -14,19 +14,19 @@ go build -o ..\..\..\bin\ro.exe .
 
 - Show help
 
-```
+```sh
 ro --help
 ```
 
 - Config
 
-```
+```sh
 ro config show --json
 ```
 
 - Build / Test / Run
 
-```
+```sh
 ro build [--fast|--ci]
 ro test
 ro run service tournamentmgmt --env dev --port 8080
@@ -34,7 +34,7 @@ ro run service tournamentmgmt --env dev --port 8080
 
 - Docker
 
-```
+```sh
 ro docker build --branch-tag --sha-tag --push
 ro docker build --tag release --latest
 ro docker compose up --profile dev
@@ -70,6 +70,7 @@ ro docs generate --wiki                     # writes docs/cli-reference.md (+ wi
 ro docs generate --wiki --commit-wiki       # also commits wiki (docs.wikiCommitMessage)
 ro docs generate --wiki --commit-wiki --commit-message "docs: refresh CLI"
 ```
+
 - Scaffold
 
 ```shell
@@ -79,11 +80,13 @@ ro scaffold module scoring --dry-run
 ro scaffold module messaging --template-set adapter --force
 ro scaffold module catalog --template-set module --base service/tournamentmgmt/src/main/java
 ```
+
 - Version
 
 ```shell
 ro version
 ```
+
 - Telemetry / Diagnostics
 
 ```shell

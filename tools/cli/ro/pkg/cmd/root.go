@@ -31,11 +31,6 @@ var rootCmd = &cobra.Command{
 	Short: "RallyOn developer CLI",
 	Long:  "RallyOn developer CLI to streamline builds, tests, deployments, and common workflows.",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		// Initialize logging first
-		quiet := flagQuiet || cfg.Output.Quiet
-		logger := logx.New(logx.Options{JSON: flagJSON, Verbose: flagVerbose && !quiet, Writer: os.Stdout, Quiet: quiet})
-		slog.SetDefault(logger)
-
 		// Bind flags to viper keys so they can override file/env
 		_ = viper.BindPFlag("output.verbose", cmd.Flags().Lookup("verbose"))
 		_ = viper.BindPFlag("output.json", cmd.Flags().Lookup("json"))
@@ -46,10 +41,25 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("config error: %w", err)
 		}
-		// Reconfigure logger if config flips verbosity/json and flags not set
-		if !flagVerbose && cfg.Output.Verbose || !flagJSON && cfg.Output.JSON {
-			slog.SetDefault(logx.New(logx.Options{JSON: cfg.Output.JSON, Verbose: cfg.Output.Verbose}))
+
+		quiet := flagQuiet || cfg.Output.Quiet
+		verbose := flagVerbose
+		if !flagVerbose {
+			verbose = cfg.Output.Verbose
 		}
+		jsonOutput := flagJSON
+		if !flagJSON {
+			jsonOutput = cfg.Output.JSON
+		}
+
+		logger := logx.New(logx.Options{
+			JSON:    jsonOutput,
+			Verbose: verbose && !quiet,
+			Writer:  os.Stdout,
+			Quiet:   quiet,
+		})
+		slog.SetDefault(logger)
+
 		flagYes = viper.GetBool("yes")
 		deployDefaultWait = cfg.Deploy.DefaultWait
 		telemetry.Init(&cfg.Telemetry)
