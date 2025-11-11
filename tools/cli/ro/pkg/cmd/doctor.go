@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os/exec"
 	"runtime"
@@ -31,6 +32,11 @@ var doctorCmd = &cobra.Command{
 		for _, c := range checks {
 			if err := c.Fn(ctx); err != nil {
 				fmt.Printf("✗ %s: %v\n", c.Name, err)
+				if flagVerbose {
+					if detail := errorDetail(err); detail != "" {
+						printDetail(detail)
+					}
+				}
 				failed = append(failed, c.Name)
 			} else {
 				fmt.Printf("✓ %s\n", c.Name)
@@ -51,9 +57,10 @@ func checkGoVersion(ctx context.Context) error {
 	cmd := exec.CommandContext(ctx, "go", "version")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return err
+		return newVerboseError(err, string(out))
 	}
-	if !strings.Contains(string(out), "go1.") {
+	output := string(out)
+	if !strings.Contains(output, "go1.") {
 		return fmt.Errorf("unexpected output: %s", out)
 	}
 	return nil
@@ -64,15 +71,20 @@ func checkMavenWrapper(ctx context.Context) error {
 	if runtime.GOOS == "windows" {
 		cmd = exec.CommandContext(ctx, "cmd", "/C", "cd "+cfg.Paths.ServiceRoot+" && mvnw.cmd -v")
 	}
-	if err := cmd.Run(); err != nil {
-		return err
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return newVerboseError(err, string(out))
 	}
 	return nil
 }
 
 func checkDocker(ctx context.Context) error {
 	cmd := exec.CommandContext(ctx, "docker", "version", "--format", "'{{.Server.Version}}'")
-	return cmd.Run()
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return newVerboseError(err, string(out))
+	}
+	return nil
 }
 
 func checkGitClean(ctx context.Context) error {
@@ -81,7 +93,70 @@ func checkGitClean(ctx context.Context) error {
 		return err
 	}
 	if strings.TrimSpace(status) != "" {
-		return fmt.Errorf("working tree has changes")
+		return newVerboseError(fmt.Errorf("working tree has changes"), status)
 	}
 	return nil
+}
+
+type detailError interface {
+	error
+	Detail() string
+}
+
+type verboseError struct {
+	err    error
+	detail string
+}
+
+func (e *verboseError) Error() string {
+	if e == nil || e.err == nil {
+		return ""
+	}
+	return e.err.Error()
+}
+
+func (e *verboseError) Unwrap() error {
+	if e == nil {
+		return nil
+	}
+	return e.err
+}
+
+func (e *verboseError) Detail() string {
+	if e == nil {
+		return ""
+	}
+	return e.detail
+}
+
+func newVerboseError(err error, detail string) error {
+	detail = strings.TrimSpace(detail)
+	if detail == "" || err == nil {
+		return err
+	}
+	return &verboseError{err: err, detail: detail}
+}
+
+func errorDetail(err error) string {
+	if err == nil {
+		return ""
+	}
+	var de detailError
+	if errors.As(err, &de) {
+		return strings.TrimSpace(de.Detail())
+	}
+	return ""
+}
+
+func printDetail(detail string) {
+	if detail == "" {
+		return
+	}
+	for _, line := range strings.Split(detail, "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+		fmt.Printf("    %s\n", line)
+	}
 }
