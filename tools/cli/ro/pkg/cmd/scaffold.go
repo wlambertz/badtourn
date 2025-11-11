@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/wlambertz/rallyon/tools/cli/ro/pkg/config"
 )
 
 var (
@@ -32,27 +33,31 @@ var scaffoldModuleCmd = &cobra.Command{
 	Short: "Create a Modulith slice skeleton (controller/service/domain/test)",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		conf := cfg
+		if conf == nil {
+			return errors.New("configuration not initialized; run via root command")
+		}
 		name := strings.TrimSpace(args[0])
 		if name == "" {
 			return errors.New("module name is required")
 		}
-		data := newTemplateData(name)
-		moduleBase := resolveModuleBase()
+		data := newTemplateData(name, conf)
+		moduleBase := resolveModuleBase(conf)
 		packagePath := flagScaffoldPackage
 		if packagePath == "" {
-			packagePath = fmt.Sprintf("%s.%s", cfg.Scaffold.DefaultPackage, data.Namespace)
+			packagePath = fmt.Sprintf("%s.%s", conf.Scaffold.DefaultPackage, data.Namespace)
 		}
 		data.Package = packagePath
 		setName := flagScaffoldTemplate
 		if setName == "" {
 			setName = "module"
 		}
-		templates, err := loadTemplateSet(setName)
+		templates, err := loadTemplateSet(setName, conf)
 		if err != nil {
 			return err
 		}
 		for _, entry := range templates {
-			dest := resolveDestination(entry.Path, moduleBase, packagePath, data)
+			dest := resolveDestination(entry.Path, moduleBase, packagePath, data, conf)
 			if flagScaffoldDryRun {
 				fmt.Printf("[dry-run] %s -> %s\n", entry.Path, dest)
 				continue
@@ -94,31 +99,52 @@ func init() {
 	rootCmd.AddCommand(scaffoldCmd)
 }
 
-func newTemplateData(name string) templateData {
+func newTemplateData(name string, conf *config.Config) templateData {
 	kebab := normalizeKebab(name)
 	pascal := toPascal(kebab)
+	defaultPackage := ""
+	if conf != nil {
+		defaultPackage = conf.Scaffold.DefaultPackage
+	}
 	return templateData{
 		ModuleName:   pascal,
 		VarName:      strings.ToLower(pascal[:1]) + pascal[1:],
 		Namespace:    kebab,
-		PackageSlash: strings.ReplaceAll(cfg.Scaffold.DefaultPackage, ".", "/"),
+		PackageSlash: strings.ReplaceAll(defaultPackage, ".", "/"),
 		GeneratedAt:  time.Now().Format(time.RFC3339),
 	}
 }
 
-func resolveModuleBase() string {
+func resolveModuleBase(conf *config.Config) string {
 	if flagScaffoldBase != "" {
 		return flagScaffoldBase
 	}
-	base := cfg.Scaffold.BasePath
-	if base == "" {
-		return filepath.Join(cfg.Paths.ServiceRoot, "src")
+	base := ""
+	if conf != nil {
+		base = conf.Scaffold.BasePath
 	}
-	return filepath.Join(cfg.Project.Root, base)
+	if base == "" {
+		serviceRoot := ""
+		if conf != nil {
+			serviceRoot = conf.Paths.ServiceRoot
+		}
+		return filepath.Join(serviceRoot, "src")
+	}
+	projectRoot := ""
+	if conf != nil {
+		projectRoot = conf.Project.Root
+	}
+	return filepath.Join(projectRoot, base)
 }
 
-func loadTemplateSet(name string) ([]templateEntry, error) {
-	dir := filepath.Join(cfg.Project.Root, cfg.Scaffold.TemplateDir, name)
+func loadTemplateSet(name string, conf *config.Config) ([]templateEntry, error) {
+	projectRoot := ""
+	templateDir := ""
+	if conf != nil {
+		projectRoot = conf.Project.Root
+		templateDir = conf.Scaffold.TemplateDir
+	}
+	dir := filepath.Join(projectRoot, templateDir, name)
 	entries := []templateEntry{}
 	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
@@ -144,13 +170,17 @@ func loadTemplateSet(name string) ([]templateEntry, error) {
 	return entries, nil
 }
 
-func resolveDestination(relPath, base, packagePath string, data templateData) string {
+func resolveDestination(relPath, base, packagePath string, data templateData, conf *config.Config) string {
 	result := relPath
 	result = strings.ReplaceAll(result, "%MODULE_PASCAL%", data.ModuleName)
 	result = strings.ReplaceAll(result, "%MODULE_KEBAB%", data.Namespace)
 	result = strings.ReplaceAll(result, "%PKG_SLASH%", strings.ReplaceAll(packagePath, ".", string(os.PathSeparator)))
 	result = strings.ReplaceAll(result, "%PKG%", strings.ReplaceAll(packagePath, ".", string(os.PathSeparator)))
-	return filepath.Join(cfg.Project.Root, result)
+	root := ""
+	if conf != nil {
+		root = conf.Project.Root
+	}
+	return filepath.Join(root, result)
 }
 
 func renderTemplate(path string, tmpl string, data templateData) error {
