@@ -20,6 +20,57 @@ go mod tidy
 go build -o ../../bin/ro .  # -o sets output path, trailing dot builds current module
 ```
 
+- WSL Java setup
+
+```bash
+# install or point to a JDK that Maven can see
+# example: use Windows JDK from WSL (quotes handle spaces)
+export JAVA_HOME="/mnt/c/Users/wla_edu/tools/jdk-25"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# or, if you installed a Linux JDK in WSL (Temurin via APT)
+# sudo apt update && sudo apt install -y temurin-17-jdk temurin-25-jdk
+export JAVA_HOME="/usr/lib/jvm/temurin-25-jdk-amd64"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# add the export once to ~/.bashrc to persist (idempotent append)
+if ! grep -q 'temurin-25-jdk-amd64' ~/.bashrc; then
+  cat >> ~/.bashrc <<'EOF'
+export JAVA_HOME="/usr/lib/jvm/temurin-25-jdk-amd64"
+export PATH="$JAVA_HOME/bin:$PATH"
+EOF
+fi
+
+# reload shell after editing ~/.bashrc
+source ~/.bashrc
+```
+
+## Run from any folder
+
+- Windows
+
+```PowerShell
+# run once per shell to try it out
+$env:Path = "C:\Users\wla_edu\Documents\GitHub\rallyon\tools\bin;" + $env:Path
+
+# to persist across sessions add the path to your profile (PowerShell 7+)
+Add-Content -Path $PROFILE -Value '$env:Path = "C:\Users\wla_edu\Documents\GitHub\rallyon\tools\bin;" + $env:Path'
+```
+
+- WSL / Linux
+
+```bash
+# ensure a per-user bin dir exists and is ahead of Windows paths
+mkdir -p "$HOME/bin"
+ln -sf /mnt/c/Users/wla_edu/Documents/GitHub/rallyon/tools/bin/ro "$HOME/bin/ro"
+grep -q 'export PATH="$HOME/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# verify WSL resolves the Linux binary (ELF) not ro.exe
+which ro
+file "$(which ro)"
+```
+
 ## Usage
 
 - Show help

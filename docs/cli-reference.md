@@ -46,9 +46,9 @@ RallyOn developer CLI to streamline builds, tests, deployments, and common workf
 ro [flags]
 ```
 
-**Flags**
+### Flags for ro
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -63,16 +63,16 @@ Build the project or specific services
 ro build [flags]
 ```
 
-**Flags**
+### Flags for ro build
 
-```
+```text
 --ci     CI mode (batch, non-interactive)
       --fast   skip tests for faster build
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro build
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -90,9 +90,9 @@ See each sub-command's help for details on how to use the generated script.
 ro completion
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro completion
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -110,17 +110,23 @@ If it is not installed already, you can install it via your OS's package manager
 
 To load completions in your current shell session:
 
-	source <(ro completion bash)
+```bash
+source <(ro completion bash)
+```
 
 To load completions for every new session, execute once:
 
-#### Linux:
+#### Linux (bash):
 
-	ro completion bash > /etc/bash_completion.d/ro
+```bash
+ro completion bash > /etc/bash_completion.d/ro
+```
 
-#### macOS:
+#### macOS (bash):
 
-	ro completion bash > $(brew --prefix)/etc/bash_completion.d/ro
+```bash
+ro completion bash > $(brew --prefix)/etc/bash_completion.d/ro
+```
 
 You will need to start a new shell for this setup to take effect.
 
@@ -128,15 +134,15 @@ You will need to start a new shell for this setup to take effect.
 ro completion bash
 ```
 
-**Flags**
+### Flags for ro completion bash
 
-```
+```text
 --no-descriptions   disable completion descriptions
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro completion bash
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -163,15 +169,15 @@ You will need to start a new shell for this setup to take effect.
 ro completion fish [flags]
 ```
 
-**Flags**
+### Flags for ro completion fish
 
-```
+```text
 --no-descriptions   disable completion descriptions
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro completion fish
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -195,15 +201,15 @@ to your powershell profile.
 ro completion powershell [flags]
 ```
 
-**Flags**
+### Flags for ro completion powershell
 
-```
+```text
 --no-descriptions   disable completion descriptions
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro completion powershell
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -227,11 +233,11 @@ To load completions in your current shell session:
 
 To load completions for every new session, execute once:
 
-#### Linux:
+#### Linux (zsh):
 
 	ro completion zsh > "${fpath[1]}/_ro"
 
-#### macOS:
+#### macOS (zsh):
 
 	ro completion zsh > $(brew --prefix)/share/zsh/site-functions/_ro
 
@@ -241,15 +247,15 @@ You will need to start a new shell for this setup to take effect.
 ro completion zsh [flags]
 ```
 
-**Flags**
+### Flags for ro completion zsh
 
-```
+```text
 --no-descriptions   disable completion descriptions
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro completion zsh
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -264,9 +270,9 @@ Configuration commands
 ro config
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro config
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -281,9 +287,9 @@ Show merged configuration
 ro config show
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro config show
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -298,9 +304,9 @@ Trigger a deploy via GitHub Actions with safety checks
 ro deploy [flags]
 ```
 
-**Flags**
+### Flags for ro deploy
 
-```
+```text
 --check-only      run preflight checks without triggering workflow
       --env string      deployment environment (e.g., dev, prod) (default "dev")
       --input strings   additional workflow input (key=value, repeatable)
@@ -308,9 +314,9 @@ ro deploy [flags]
       --wait            wait for workflow completion (overrides deploy.defaultWait) (default true)
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro deploy
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -325,9 +331,9 @@ Docker workflows: build, push, compose
 ro docker
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docker
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -342,9 +348,9 @@ Build (and optionally push) Docker image for tournamentmgmt
 ro docker build [flags]
 ```
 
-**Flags**
+### Flags for ro docker build
 
-```
+```text
 --branch-tag    include branch-based tag (default true)
       --latest        include latest tag
       --push          push images after build
@@ -352,9 +358,9 @@ ro docker build [flags]
       --tag strings   extra tag(s) to apply (without registry unless fully qualified)
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docker build
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -369,17 +375,17 @@ Compose up/down the local stack
 ro docker compose
 ```
 
-**Flags**
+### Flags for ro docker compose
 
-```
+```text
 --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
       --profile strings   compose profile(s) to enable
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docker compose
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -394,9 +400,9 @@ docker compose down
 ro docker compose down
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docker compose down
 
-```
+```text
 --dry-run           show actions without executing
       --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
@@ -414,9 +420,9 @@ docker compose logs
 ro docker compose logs
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docker compose logs
 
-```
+```text
 --dry-run           show actions without executing
       --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
@@ -434,9 +440,9 @@ docker compose up
 ro docker compose up
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docker compose up
 
-```
+```text
 --dry-run           show actions without executing
       --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
@@ -454,9 +460,9 @@ Documentation utilities
 ro docs [flags]
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docs
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -471,9 +477,9 @@ Generate CLI reference markdown
 ro docs generate [flags]
 ```
 
-**Flags**
+### Flags for ro docs generate
 
-```
+```text
 --commit-message string   commit message when publishing to wiki (overrides
                                 docs.wikiCommitMessage)
       --commit-wiki             commit wiki changes after generation
@@ -483,9 +489,9 @@ ro docs generate [flags]
       --wiki-output string      wiki docs path (defaults to docs.wikiOutput)
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro docs generate
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -500,9 +506,9 @@ Git helper commands (status, branch, rebase, commit)
 ro git
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -517,15 +523,15 @@ Display branch information and ahead/behind summary
 ro git branch [flags]
 ```
 
-**Flags**
+### Flags for ro git branch
 
-```
+```text
 --verbose   show verbose branch listing
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git branch
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --yes       auto-confirm prompts and bypass interactive checks
@@ -539,9 +545,9 @@ Guide conventional commits
 ro git commit [flags]
 ```
 
-**Flags**
+### Flags for ro git commit
 
-```
+```text
 --all                     stage tracked files before committing (git add -A)
       --body string             body/description (supports newlines)
       --breaking                mark commit as breaking change (adds '!')
@@ -552,9 +558,9 @@ ro git commit [flags]
       --wip                     mark commit as work in progress
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git commit
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -569,17 +575,17 @@ Push current branch to configured remote (with safeguards)
 ro git push [flags]
 ```
 
-**Flags**
+### Flags for ro git push
 
-```
+```text
 --branch string   branch to push (defaults to current)
       --force           use --force-with-lease
       --remote string   remote name (defaults to git.defaultRemote)
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git push
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -594,16 +600,16 @@ Pull with rebase against the specified upstream
 ro git rebase [flags]
 ```
 
-**Flags**
+### Flags for ro git rebase
 
-```
+```text
 --autostash     auto-stash local changes during rebase (default true)
       --onto string   upstream (remote/branch) to rebase against (default "origin/main")
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git rebase
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -618,15 +624,15 @@ Show git status (short by default)
 ro git status [flags]
 ```
 
-**Flags**
+### Flags for ro git status
 
-```
+```text
 --long   show long git status output
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git status
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -641,17 +647,17 @@ Fetch and rebase current branch onto upstream
 ro git sync [flags]
 ```
 
-**Flags**
+### Flags for ro git sync
 
-```
+```text
 --autostash       auto stash during rebase (default true)
       --branch string   upstream branch (defaults to git.defaultBranch)
       --remote string   upstream remote (defaults to git.defaultRemote)
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro git sync
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -666,9 +672,9 @@ Run local services
 ro run
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro run
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -683,16 +689,16 @@ Run tournament management service locally
 ro run service tournamentmgmt [flags]
 ```
 
-**Flags**
+### Flags for ro run service
 
-```
+```text
 --env string   spring profile (default "dev")
       --port int     server port (default 8080)
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro run service
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -707,9 +713,9 @@ Generate boilerplate for RallyOn modules
 ro scaffold
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro scaffold
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -724,17 +730,17 @@ Create a Modulith slice skeleton (controller/service/domain/test)
 ro scaffold module <name> [flags]
 ```
 
-**Flags**
+### Flags for ro scaffold module
 
-```
+```text
 --base string      base path for Java sources (defaults to service module src/main/java)
       --dry-run          preview files without writing
       --package string   base Java package for the module
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro scaffold module
 
-```
+```text
 --json      emit JSON-formatted output
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
@@ -748,9 +754,9 @@ Run test suites
 ro test
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro test
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
@@ -765,9 +771,9 @@ Show CLI version information
 ro version
 ```
 
-**Inherited Flags**
+### Inherited Flags for ro version
 
-```
+```text
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
       --verbose   enable verbose output
