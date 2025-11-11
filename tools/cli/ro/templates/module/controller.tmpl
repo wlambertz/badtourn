@@ -1,0 +1,23 @@
+package {{ .Package }}.api;
+
+import org.springframework.modulith.ApplicationModule;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@ApplicationModule(displayName = "{{ .ModuleName }}")
+@RestController
+@RequestMapping("/api/{{ .Namespace }}")
+public class {{ .ModuleName }}Controller {
+
+    private final {{ .Package }}.application.{{ .ModuleName }}Service {{ .VarName }}Service;
+
+    public {{ .ModuleName }}Controller({{ .Package }}.application.{{ .ModuleName }}Service {{ .VarName }}Service) {
+        this.{{ .VarName }}Service = {{ .VarName }}Service;
+    }
+
+    @GetMapping("/health")
+    public String health() {
+        return {{ .VarName }}Service.health();
+    }
+}

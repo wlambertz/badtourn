@@ -1,0 +1,63 @@
+project:
+  name: rallyon
+  root: .
+
+paths:
+  serviceRoot: service/tournamentmgmt
+  appRoot: application
+  thirdPartyRoot: 3rd_party
+  adminRoot: admin
+
+build:
+  mavenWrapper: ./mvnw
+  defaultGoals: ["clean", "verify"]
+
+docker:
+  workflow: .github/workflows/Tournamentmgmt-docker.yaml
+  imageRepo: wlambertz/tournamentmgmt
+  registry: ghcr.io
+  context: service/tournamentmgmt
+  dockerfile: service/tournamentmgmt/Dockerfile
+  composeFile: docker-compose.yml
+
+docs:
+  output: docs/cli-reference.md
+  wikiOutput: wiki/CLI.md
+  publishToWiki: false
+
+scaffold:
+  templateDir: tools/cli/ro/templates
+  defaultPackage: com.rallyon.tournament
+  basePath: service/tournamentmgmt/src
+
+telemetry:
+  enabled: true
+  endpoint: ""
+  clientId: ""
+  collectCommands:
+    - deploy
+    - docker build
+    - docker compose
+    - scaffold module
+
+deploy:
+  repo: wlambertz/rallyon
+  workflow: .github/workflows/Tournamentmgmt-deploy.yaml
+  defaultRef: main
+  envRefs:
+    prod: main
+  requireClean: true
+  requireProtected: false # is off due its dependency on legacy branch protection rules, despite having a ruleset in place
+  requireGreen: true
+  pollInterval: 15s
+  pollTimeout: 10m
+  inputs: {}
+  defaultWait: true
+
+git:
+  conventionalCommits: true
+
+output:
+  json: false
+  verbose: false
+  quiet: false

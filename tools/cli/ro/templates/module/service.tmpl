@@ -1,0 +1,11 @@
+package {{ .Package }}.application;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class {{ .ModuleName }}Service {
+
+    public String health() {
+        return "{{ .ModuleName }} module is alive";
+    }
+}
