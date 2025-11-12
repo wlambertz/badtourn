@@ -149,16 +149,38 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 
   - Template sets live in `tools/cli/ro/templates/<set>` (default `module`). Customize by adding your own `files.json` + `.tmpl` files.
 
-## Story: Autoformat and Linters
+## Documentation Formatting (Prettier)
 
-- **Context**: Markdown and YAML edits routinely diverge during reviews because everyone hand-wraps text differently. We already rely on Go linters (`go vet` via the CLI module), but there was no shared formatter to keep docs/config clean before running the rest of the lint suite.
-- **Story**: As a contributor, I can run one command that autoformats docs/config with Prettier and then hands the cleaned tree to the existing linters so CI stays green.
-- **Implementation Notes**:
-  - Tooling lives at the repo root (`package.json`, `.prettierrc.json`, `.prettierignore`). Run `npm install` once to download Prettier.
-  - `npm run format` rewrites `docs/**/*.md` plus root-level Markdown/YAML/JSON (e.g., `README.md`, `AGENTS.md`, `ro.yaml`, `package.json`).
-  - `npm run lint` first executes `npm run lint:prettier` (a `prettier --check` pass) and then reuses the existing Go linter by running `go vet ./...` inside `tools/cli/ro`.
-  - `.prettierignore` skips generated assets (`docs/cli-reference.md`, build folders, the wiki submodule) so formatter noise stays out of commits.
-- **Acceptance Criteria**:
-  - Formatting issues fail fast when developers run `npm run lint`, yet Go vet continues to run so we do not lose coverage from the existing lint step.
-  - Running `npm run format` followed by `npm run lint` on a clean tree produces no diffs.
-  - This story is considered complete when these commands are documented and reviewers can point contributors to them for autoformat fixes.
+- Install the Node tooling once per clone:
+
+  ```bash
+  npm install
+  ```
+
+- Format everything in scope (Markdown, MDX, JSON, YAML, HTML snippets) with:
+
+  ```bash
+  npm run format
+  ```
+
+- Validate the current tree (used by CI via `.github/workflows/build.yaml`) with:
+
+  ```bash
+  npm run format:check
+  # or, equivalently
+  npm run lint
+  ```
+
+- Changes to generated or vendored content are ignored through `.prettierignore` (e.g., `docs/cli-reference.md`, `wiki/`, build outputs).
+- `docs/prettier-sample.md` demonstrates the expected output across headings, lists, tables, fenced code, and inline HTML—use it when experimenting with new Prettier options.
+
+### File-Type Coverage & Evaluation
+
+| Type/Area | Status | Notes / Rationale |
+| --- | --- | --- |
+| Markdown & MDX | Adopted | Main documentation (`docs/`, root README, ADRs) stays consistent with 2-space indent and 120-char width (no wrapping). |
+| JSON & YAML | Adopted | Configuration such as `ro.yaml`, GitHub workflows, and sample payloads run through Prettier for consistent indentation. |
+| HTML fragments | Adopted | Embedded HTML inside docs (callouts, tables) formats cleanly; no build impact observed. |
+| Templates (Go text/template, Spring scaffolds) | Deferred | Prettier lacks first-class support for Go template delimiters; follow-up task tracked in backlog to explore prettier-plugin-go-template or custom formatting. |
+
+- Contributors should run `npm run format` before opening a PR; CI fails on unformatted files, so `npm run lint` mirrors the check locally.

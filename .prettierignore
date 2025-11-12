@@ -1,0 +1,17 @@
+# dependencies and build outputs
+node_modules
+.cache
+build
+bin
+**/bin/
+**/build/
+**/dist/
+service/**/target
+
+# generated or vendored docs
+docs/cli-reference.md
+wiki
+
+# other generated artifacts
+tools/cli/ro/dist
+

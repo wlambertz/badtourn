@@ -4,6 +4,7 @@ _Generated on 2025-11-12T08:43:45+01:00_
 
 ## Table of Contents
 
+- [Formatting Commands](#formatting-commands)
 - [ro](#ro)
 - [ro build](#ro-build)
 - [ro completion](#ro-completion)
@@ -36,6 +37,18 @@ _Generated on 2025-11-12T08:43:45+01:00_
 - [ro telemetry status](#ro-telemetry-status)
 - [ro test](#ro-test)
 - [ro version](#ro-version)
+
+## Formatting Commands
+
+Formatter tooling lives at the repo root alongside `package.json`.
+
+```bash
+npm install        # once per clone to fetch Prettier
+npm run format     # rewrites Markdown/MDX/JSON/YAML/HTML docs
+npm run lint       # alias for npm run format:check (used in CI)
+```
+
+Refer to `docs/prettier-sample.md` for an end-to-end example of the expected output and `docs/dev-cli.md` for deeper guidance on scope/deferral decisions.
 
 ## ro
 
@@ -733,4 +746,3 @@ ro version
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
-

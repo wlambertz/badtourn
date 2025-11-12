@@ -1,7 +1,7 @@
 [
-  {"path": "src/main/java/%PKG_SLASH%/api/%MODULE_PASCAL%Controller.java", "template": "controller"},
-  {"path": "src/main/java/%PKG_SLASH%/application/%MODULE_PASCAL%Service.java", "template": "service"},
-  {"path": "src/main/java/%PKG_SLASH%/domain/%MODULE_PASCAL%.java", "template": "domain"},
-  {"path": "src/test/java/%PKG_SLASH%/api/%MODULE_PASCAL%ControllerTest.java", "template": "controllerTest"},
-  {"path": "docs/modules/%MODULE_KEBAB%.md", "template": "readme"}
+  { "path": "src/main/java/%PKG_SLASH%/api/%MODULE_PASCAL%Controller.java", "template": "controller" },
+  { "path": "src/main/java/%PKG_SLASH%/application/%MODULE_PASCAL%Service.java", "template": "service" },
+  { "path": "src/main/java/%PKG_SLASH%/domain/%MODULE_PASCAL%.java", "template": "domain" },
+  { "path": "src/test/java/%PKG_SLASH%/api/%MODULE_PASCAL%ControllerTest.java", "template": "controllerTest" },
+  { "path": "docs/modules/%MODULE_KEBAB%.md", "template": "readme" }
 ]
