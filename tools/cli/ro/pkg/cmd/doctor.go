@@ -20,6 +20,7 @@ var doctorCmd = &cobra.Command{
 			Fn   func(context.Context) error
 		}{
 			{"Go toolchain", checkGoVersion},
+			{"Node.js (npm)", checkNodeNPM},
 			{"Java (Maven wrapper)", checkMavenWrapper},
 			{"Docker", checkDocker},
 			{"Git", checkGitClean},
@@ -74,6 +75,23 @@ func checkMavenWrapper(ctx context.Context) error {
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return newVerboseError(err, string(out))
+	}
+	return nil
+}
+
+func checkNodeNPM(ctx context.Context) error {
+	cmdName, err := findNPMExecutable()
+	if err != nil {
+		return err
+	}
+	cmd := exec.CommandContext(ctx, cmdName, "--version")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return newVerboseError(err, string(out))
+	}
+	version := strings.TrimSpace(string(out))
+	if version == "" {
+		return fmt.Errorf("npm returned empty version output")
 	}
 	return nil
 }

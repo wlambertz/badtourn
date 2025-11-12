@@ -1,0 +1,25 @@
+{
+  "name": "rallyon",
+  "version": "1.0.0",
+  "description": "RallyOn developer tooling",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run format:check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wlambertz/rallyon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wlambertz/rallyon/issues"
+  },
+  "homepage": "https://github.com/wlambertz/rallyon#readme",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}

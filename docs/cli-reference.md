@@ -1,6 +1,6 @@
 # RallyOn CLI Reference
 
-_Generated on 2025-11-12T08:43:45+01:00_
+_Generated on 2025-11-12T13:54:16+01:00_
 
 ## Table of Contents
 
@@ -19,6 +19,7 @@ _Generated on 2025-11-12T08:43:45+01:00_
 - [ro docs](#ro-docs)
 - [ro docs generate](#ro-docs-generate)
 - [ro doctor](#ro-doctor)
+- [ro format](#ro-format)
 - [ro git](#ro-git)
 - [ro git branch](#ro-git-branch)
 - [ro git commit](#ro-git-commit)
@@ -353,6 +354,32 @@ Run diagnostics to validate local environment
 
 ```bash
 ro doctor
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro format
+
+Format documentation and config assets with Prettier
+
+Run the repo's Prettier formatter (write mode by default) against Markdown, MDX, JSON, YAML, and other text-based assets.
+
+```bash
+ro format [flags]
+```
+
+**Flags**
+
+```
+--check   run in verification mode (no writes)
 ```
 
 **Inherited Flags**
