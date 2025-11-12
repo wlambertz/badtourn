@@ -56,3 +56,6 @@ tools/cli/ro/.gocache/
 tools/cli/ro/dist/
 bin/
 tools/bin/
+
+# Node tooling
+node_modules/

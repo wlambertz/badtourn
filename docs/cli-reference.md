@@ -1,16 +1,12 @@
 # RallyOn CLI Reference
 
-_Generated on 2025-11-10T12:21:31+01:00_
+_Generated on 2025-11-12T08:43:45+01:00_
 
 ## Table of Contents
 
 - [ro](#ro)
 - [ro build](#ro-build)
 - [ro completion](#ro-completion)
-- [ro completion bash](#ro-completion-bash)
-- [ro completion fish](#ro-completion-fish)
-- [ro completion powershell](#ro-completion-powershell)
-- [ro completion zsh](#ro-completion-zsh)
 - [ro config](#ro-config)
 - [ro config show](#ro-config-show)
 - [ro deploy](#ro-deploy)
@@ -22,6 +18,7 @@ _Generated on 2025-11-10T12:21:31+01:00_
 - [ro docker compose up](#ro-docker-compose-up)
 - [ro docs](#ro-docs)
 - [ro docs generate](#ro-docs-generate)
+- [ro doctor](#ro-doctor)
 - [ro git](#ro-git)
 - [ro git branch](#ro-git-branch)
 - [ro git commit](#ro-git-commit)
@@ -33,6 +30,10 @@ _Generated on 2025-11-10T12:21:31+01:00_
 - [ro run service](#ro-run-service)
 - [ro scaffold](#ro-scaffold)
 - [ro scaffold module](#ro-scaffold-module)
+- [ro telemetry](#ro-telemetry)
+- [ro telemetry disable](#ro-telemetry-disable)
+- [ro telemetry enable](#ro-telemetry-enable)
+- [ro telemetry status](#ro-telemetry-status)
 - [ro test](#ro-test)
 - [ro version](#ro-version)
 
@@ -46,11 +47,12 @@ RallyOn developer CLI to streamline builds, tests, deployments, and common workf
 ro [flags]
 ```
 
-### Flags for ro
+**Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -63,215 +65,37 @@ Build the project or specific services
 ro build [flags]
 ```
 
-### Flags for ro build
+**Flags**
 
-```text
+```
 --ci     CI mode (batch, non-interactive)
       --fast   skip tests for faster build
 ```
 
-### Inherited Flags for ro build
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
 
 ## ro completion
 
-Generate the autocompletion script for the specified shell
-
-Generate the autocompletion script for ro for the specified shell.
-See each sub-command's help for details on how to use the generated script.
+Install shell completion script for the current shell
 
 ```bash
-ro completion
+ro completion install
 ```
 
-### Inherited Flags for ro completion
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
-      --verbose   enable verbose output
-      --yes       auto-confirm prompts and bypass interactive checks
-```
-
-## ro completion bash
-
-Generate the autocompletion script for bash
-
-Generate the autocompletion script for the bash shell.
-
-This script depends on the 'bash-completion' package.
-If it is not installed already, you can install it via your OS's package manager.
-
-To load completions in your current shell session:
-
-```bash
-source <(ro completion bash)
-```
-
-To load completions for every new session, execute once:
-
-### Linux (bash)
-
-```bash
-ro completion bash > /etc/bash_completion.d/ro
-```
-
-### macOS (bash)
-
-```bash
-ro completion bash > $(brew --prefix)/etc/bash_completion.d/ro
-```
-
-You will need to start a new shell for this setup to take effect.
-
-```bash
-ro completion bash
-```
-
-### Flags for ro completion bash
-
-```text
---no-descriptions   disable completion descriptions
-```
-
-### Inherited Flags for ro completion bash
-
-```text
---dry-run   show actions without executing
-      --json      emit JSON-formatted output
-      --verbose   enable verbose output
-      --yes       auto-confirm prompts and bypass interactive checks
-```
-
-## ro completion fish
-
-Generate the autocompletion script for fish
-
-Generate the autocompletion script for the fish shell.
-
-To load completions in your current shell session:
-
-```bash
-ro completion fish | source
-```
-
-To load completions for every new session, execute once:
-
-```bash
-ro completion fish > ~/.config/fish/completions/ro.fish
-```
-
-You will need to start a new shell for this setup to take effect.
-
-```bash
-ro completion fish [flags]
-```
-
-### Flags for ro completion fish
-
-```text
---no-descriptions   disable completion descriptions
-```
-
-### Inherited Flags for ro completion fish
-
-```text
---dry-run   show actions without executing
-      --json      emit JSON-formatted output
-      --verbose   enable verbose output
-      --yes       auto-confirm prompts and bypass interactive checks
-```
-
-## ro completion powershell
-
-Generate the autocompletion script for powershell
-
-Generate the autocompletion script for powershell.
-
-To load completions in your current shell session:
-
-```powershell
-ro completion powershell | Out-String | Invoke-Expression
-```
-
-To load completions for every new session, add the output of the above command
-to your powershell profile.
-
-```bash
-ro completion powershell [flags]
-```
-
-### Flags for ro completion powershell
-
-```text
---no-descriptions   disable completion descriptions
-```
-
-### Inherited Flags for ro completion powershell
-
-```text
---dry-run   show actions without executing
-      --json      emit JSON-formatted output
-      --verbose   enable verbose output
-      --yes       auto-confirm prompts and bypass interactive checks
-```
-
-## ro completion zsh
-
-Generate the autocompletion script for zsh
-
-Generate the autocompletion script for the zsh shell.
-
-If shell completion is not already enabled in your environment you will need
-to enable it.  You can execute the following once:
-
-```bash
-echo "autoload -U compinit; compinit" >> ~/.zshrc
-```
-
-To load completions in your current shell session:
-
-```bash
-source <(ro completion zsh)
-```
-
-To load completions for every new session, execute once:
-
-### Linux (zsh)
-
-```bash
-ro completion zsh > "${fpath[1]}/_ro"
-```
-
-### macOS (zsh)
-
-```bash
-ro completion zsh > $(brew --prefix)/share/zsh/site-functions/_ro
-```
-
-You will need to start a new shell for this setup to take effect.
-
-```bash
-ro completion zsh [flags]
-```
-
-### Flags for ro completion zsh
-
-```text
---no-descriptions   disable completion descriptions
-```
-
-### Inherited Flags for ro completion zsh
-
-```text
---dry-run   show actions without executing
-      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -284,11 +108,12 @@ Configuration commands
 ro config
 ```
 
-### Inherited Flags for ro config
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -301,11 +126,12 @@ Show merged configuration
 ro config show
 ```
 
-### Inherited Flags for ro config show
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -318,9 +144,9 @@ Trigger a deploy via GitHub Actions with safety checks
 ro deploy [flags]
 ```
 
-### Flags for ro deploy
+**Flags**
 
-```text
+```
 --check-only      run preflight checks without triggering workflow
       --env string      deployment environment (e.g., dev, prod) (default "dev")
       --input strings   additional workflow input (key=value, repeatable)
@@ -328,11 +154,12 @@ ro deploy [flags]
       --wait            wait for workflow completion (overrides deploy.defaultWait) (default true)
 ```
 
-### Inherited Flags for ro deploy
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -345,11 +172,12 @@ Docker workflows: build, push, compose
 ro docker
 ```
 
-### Inherited Flags for ro docker
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -362,9 +190,9 @@ Build (and optionally push) Docker image for tournamentmgmt
 ro docker build [flags]
 ```
 
-### Flags for ro docker build
+**Flags**
 
-```text
+```
 --branch-tag    include branch-based tag (default true)
       --latest        include latest tag
       --push          push images after build
@@ -372,11 +200,12 @@ ro docker build [flags]
       --tag strings   extra tag(s) to apply (without registry unless fully qualified)
 ```
 
-### Inherited Flags for ro docker build
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -389,19 +218,20 @@ Compose up/down the local stack
 ro docker compose
 ```
 
-### Flags for ro docker compose
+**Flags**
 
-```text
+```
 --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
       --profile strings   compose profile(s) to enable
 ```
 
-### Inherited Flags for ro docker compose
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -414,14 +244,15 @@ docker compose down
 ro docker compose down
 ```
 
-### Inherited Flags for ro docker compose down
+**Inherited Flags**
 
-```text
+```
 --dry-run           show actions without executing
       --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
       --json              emit JSON-formatted output
       --profile strings   compose profile(s) to enable
+      --quiet             suppress info logs (errors only)
       --verbose           enable verbose output
       --yes               auto-confirm prompts and bypass interactive checks
 ```
@@ -434,14 +265,15 @@ docker compose logs
 ro docker compose logs
 ```
 
-### Inherited Flags for ro docker compose logs
+**Inherited Flags**
 
-```text
+```
 --dry-run           show actions without executing
       --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
       --json              emit JSON-formatted output
       --profile strings   compose profile(s) to enable
+      --quiet             suppress info logs (errors only)
       --verbose           enable verbose output
       --yes               auto-confirm prompts and bypass interactive checks
 ```
@@ -454,14 +286,15 @@ docker compose up
 ro docker compose up
 ```
 
-### Inherited Flags for ro docker compose up
+**Inherited Flags**
 
-```text
+```
 --dry-run           show actions without executing
       --env-file string   compose env file to load
       --file string       compose file to use (defaults to docker.composeFile)
       --json              emit JSON-formatted output
       --profile strings   compose profile(s) to enable
+      --quiet             suppress info logs (errors only)
       --verbose           enable verbose output
       --yes               auto-confirm prompts and bypass interactive checks
 ```
@@ -474,11 +307,12 @@ Documentation utilities
 ro docs [flags]
 ```
 
-### Inherited Flags for ro docs
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -491,9 +325,9 @@ Generate CLI reference markdown
 ro docs generate [flags]
 ```
 
-### Flags for ro docs generate
+**Flags**
 
-```text
+```
 --commit-message string   commit message when publishing to wiki (overrides
                                 docs.wikiCommitMessage)
       --commit-wiki             commit wiki changes after generation
@@ -503,11 +337,30 @@ ro docs generate [flags]
       --wiki-output string      wiki docs path (defaults to docs.wikiOutput)
 ```
 
-### Inherited Flags for ro docs generate
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro doctor
+
+Run diagnostics to validate local environment
+
+```bash
+ro doctor
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -520,11 +373,12 @@ Git helper commands (status, branch, rebase, commit)
 ro git
 ```
 
-### Inherited Flags for ro git
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -537,17 +391,18 @@ Display branch information and ahead/behind summary
 ro git branch [flags]
 ```
 
-### Flags for ro git branch
+**Flags**
 
-```text
+```
 --verbose   show verbose branch listing
 ```
 
-### Inherited Flags for ro git branch
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --yes       auto-confirm prompts and bypass interactive checks
 ```
 
@@ -559,9 +414,9 @@ Guide conventional commits
 ro git commit [flags]
 ```
 
-### Flags for ro git commit
+**Flags**
 
-```text
+```
 --all                     stage tracked files before committing (git add -A)
       --body string             body/description (supports newlines)
       --breaking                mark commit as breaking change (adds '!')
@@ -572,11 +427,12 @@ ro git commit [flags]
       --wip                     mark commit as work in progress
 ```
 
-### Inherited Flags for ro git commit
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -589,19 +445,20 @@ Push current branch to configured remote (with safeguards)
 ro git push [flags]
 ```
 
-### Flags for ro git push
+**Flags**
 
-```text
+```
 --branch string   branch to push (defaults to current)
       --force           use --force-with-lease
       --remote string   remote name (defaults to git.defaultRemote)
 ```
 
-### Inherited Flags for ro git push
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -614,18 +471,19 @@ Pull with rebase against the specified upstream
 ro git rebase [flags]
 ```
 
-### Flags for ro git rebase
+**Flags**
 
-```text
+```
 --autostash     auto-stash local changes during rebase (default true)
       --onto string   upstream (remote/branch) to rebase against (default "origin/main")
 ```
 
-### Inherited Flags for ro git rebase
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -638,17 +496,18 @@ Show git status (short by default)
 ro git status [flags]
 ```
 
-### Flags for ro git status
+**Flags**
 
-```text
+```
 --long   show long git status output
 ```
 
-### Inherited Flags for ro git status
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -661,19 +520,20 @@ Fetch and rebase current branch onto upstream
 ro git sync [flags]
 ```
 
-### Flags for ro git sync
+**Flags**
 
-```text
+```
 --autostash       auto stash during rebase (default true)
       --branch string   upstream branch (defaults to git.defaultBranch)
       --remote string   upstream remote (defaults to git.defaultRemote)
 ```
 
-### Inherited Flags for ro git sync
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -686,11 +546,12 @@ Run local services
 ro run
 ```
 
-### Inherited Flags for ro run
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -703,18 +564,19 @@ Run tournament management service locally
 ro run service tournamentmgmt [flags]
 ```
 
-### Flags for ro run service
+**Flags**
 
-```text
+```
 --env string   spring profile (default "dev")
       --port int     server port (default 8080)
 ```
 
-### Inherited Flags for ro run service
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -727,11 +589,12 @@ Generate boilerplate for RallyOn modules
 ro scaffold
 ```
 
-### Inherited Flags for ro scaffold
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -744,18 +607,93 @@ Create a Modulith slice skeleton (controller/service/domain/test)
 ro scaffold module <name> [flags]
 ```
 
-### Flags for ro scaffold module
+**Flags**
 
-```text
---base string      base path for Java sources (defaults to service module src/main/java)
-      --dry-run          preview files without writing
-      --package string   base Java package for the module
+```
+--base string           base path override (defaults to scaffold.basePath)
+      --dry-run               preview files without writing
+      --force                 overwrite existing files
+      --package string        base Java package for the module
+      --template-set string   template set name (e.g., module, adapter) (default "module")
 ```
 
-### Inherited Flags for ro scaffold module
+**Inherited Flags**
 
-```text
+```
 --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro telemetry
+
+Manage CLI telemetry
+
+```bash
+ro telemetry
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro telemetry disable
+
+Print instructions to disable telemetry
+
+```bash
+ro telemetry disable
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro telemetry enable
+
+Print instructions to enable telemetry
+
+```bash
+ro telemetry enable
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro telemetry status
+
+Show telemetry configuration
+
+```bash
+ro telemetry status
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -768,11 +706,12 @@ Run test suites
 ro test
 ```
 
-### Inherited Flags for ro test
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
@@ -785,11 +724,13 @@ Show CLI version information
 ro version
 ```
 
-### Inherited Flags for ro version
+**Inherited Flags**
 
-```text
+```
 --dry-run   show actions without executing
       --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
+
