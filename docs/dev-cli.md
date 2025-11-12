@@ -67,7 +67,7 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
   - Use `--body`/`--breaking-notes` to supply additional paragraphs.
 - `ro git push` – pushes current branch with clean-tree enforcement; add `--force` for `--force-with-lease`.
 - `ro git sync` – fetch + rebase onto configured upstream; `--remote`/`--branch` override defaults, `--autostash=false` to keep changes intact.
-- `ro doctor` – runs environment diagnostics (Go, Maven wrapper, Docker, Git cleanliness).
+- `ro doctor` – runs environment diagnostics (Go, Node/npm, Maven wrapper, Docker, Git cleanliness).
 - `ro telemetry status|enable|disable` – inspect or update telemetry configuration. Opt in via `RO_TELEMETRY_ENABLED=true` and set `telemetry.endpoint`/`clientId`. Events capture command, duration, exit code only.
 
 ## Deploy Workflow
@@ -160,19 +160,26 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 - Format everything in scope (Markdown, MDX, JSON, YAML, HTML snippets) with:
 
   ```bash
-  npm run format
+  ro format        # wraps npm run format
   ```
 
 - Validate the current tree (used by CI via `.github/workflows/build.yaml`) with:
 
   ```bash
-  npm run format:check
-  # or, equivalently
-  npm run lint
+  ro format --check   # wraps npm run format:check
+  # equivalent npm command: npm run format:check
   ```
 
 - Changes to generated or vendored content are ignored through `.prettierignore` (e.g., `docs/cli-reference.md`, `wiki/`, build outputs).
 - `docs/prettier-sample.md` demonstrates the expected output across headings, lists, tables, fenced code, and inline HTML—use it when experimenting with new Prettier options.
+- `tools/scripts/check-format.sh` centralizes the Prettier check logic; CI calls this script so results stay consistent (you can also reuse it in custom hooks if desired).
+
+### Verification Workflow
+
+1. Make an edit in any doc (or the sample file) that uses tables, lists, or code fences.
+2. Run `ro format` (or `npm run format`) to rewrite the file with the repo defaults.
+3. Execute `ro format --check` (or `npm run format:check`) to confirm there are no remaining formatting issues—this is the same command CI runs.
+4. Review the diff from `docs/prettier-sample.md` if you need a quick before/after reference for complex sections like embedded HTML.
 
 ### File-Type Coverage & Evaluation
 
@@ -183,4 +190,4 @@ Use `--verbose` for more logging, `--json` for machine-friendly output. `--dry-r
 | HTML fragments | Adopted | Embedded HTML inside docs (callouts, tables) formats cleanly; no build impact observed. |
 | Templates (Go text/template, Spring scaffolds) | Deferred | Prettier lacks first-class support for Go template delimiters; follow-up task tracked in backlog to explore prettier-plugin-go-template or custom formatting. |
 
-- Contributors should run `npm run format` before opening a PR; CI fails on unformatted files, so `npm run lint` mirrors the check locally.
+- Contributors should run `ro format` (or `npm run format`) before opening a PR; CI fails on unformatted files, so `ro format --check` / `npm run lint` mirrors the check locally.

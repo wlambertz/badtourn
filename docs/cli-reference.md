@@ -1,10 +1,9 @@
 # RallyOn CLI Reference
 
-_Generated on 2025-11-12T08:43:45+01:00_
+_Generated on 2025-11-12T13:54:16+01:00_
 
 ## Table of Contents
 
-- [Formatting Commands](#formatting-commands)
 - [ro](#ro)
 - [ro build](#ro-build)
 - [ro completion](#ro-completion)
@@ -20,6 +19,7 @@ _Generated on 2025-11-12T08:43:45+01:00_
 - [ro docs](#ro-docs)
 - [ro docs generate](#ro-docs-generate)
 - [ro doctor](#ro-doctor)
+- [ro format](#ro-format)
 - [ro git](#ro-git)
 - [ro git branch](#ro-git-branch)
 - [ro git commit](#ro-git-commit)
@@ -37,18 +37,6 @@ _Generated on 2025-11-12T08:43:45+01:00_
 - [ro telemetry status](#ro-telemetry-status)
 - [ro test](#ro-test)
 - [ro version](#ro-version)
-
-## Formatting Commands
-
-Formatter tooling lives at the repo root alongside `package.json`.
-
-```bash
-npm install        # once per clone to fetch Prettier
-npm run format     # rewrites Markdown/MDX/JSON/YAML/HTML docs
-npm run lint       # alias for npm run format:check (used in CI)
-```
-
-Refer to `docs/prettier-sample.md` for an end-to-end example of the expected output and `docs/dev-cli.md` for deeper guidance on scope/deferral decisions.
 
 ## ro
 
@@ -366,6 +354,32 @@ Run diagnostics to validate local environment
 
 ```bash
 ro doctor
+```
+
+**Inherited Flags**
+
+```
+--dry-run   show actions without executing
+      --json      emit JSON-formatted output
+      --quiet     suppress info logs (errors only)
+      --verbose   enable verbose output
+      --yes       auto-confirm prompts and bypass interactive checks
+```
+
+## ro format
+
+Format documentation and config assets with Prettier
+
+Run the repo's Prettier formatter (write mode by default) against Markdown, MDX, JSON, YAML, and other text-based assets.
+
+```bash
+ro format [flags]
+```
+
+**Flags**
+
+```
+--check   run in verification mode (no writes)
 ```
 
 **Inherited Flags**
@@ -746,3 +760,4 @@ ro version
       --verbose   enable verbose output
       --yes       auto-confirm prompts and bypass interactive checks
 ```
+

@@ -1,25 +1,25 @@
 # Prettier Sample Document
 
-This doc showcases the expected formatting after running `npm run format`. Feel free to edit it when testing updates to our Prettier rules.
+This file demonstrates the formatting rules enforced by `ro format` / `npm run format`. Feel free to tweak it when evaluating new Prettier settings.
 
 ## Lists And Quotes
 
-1. Change something locally.
-2. Run `npm run format`.
-3. Review the diff and commit if the output matches expectations.
+1. Make a change in any Markdown/MDX/JSON/YAML file.
+2. Run `ro format` (or `npm run format`) to apply the repo defaults.
+3. Double-check the diff before committing.
 
-- Bullet lists stay indented with two spaces.
-- Inline code such as `printWidth` remains on one line.
-- Block quotes are normalized when they span multiple lines.
+- Bulleted lists stay at two spaces of indentation.
+- Inline code such as `printWidth` remains on a single line.
+- Block quotes wrap cleanly without manual line breaks.
 
-> RallyOn docs should feel like they were authored by a single writer even when many contributors are involved.
+> RallyOn docs should read as if a single author wrote them, even though many contributors collaborate.
 
 ## Tables
 
-| Command                | Description                                   |
-| ---------------------- | --------------------------------------------- |
-| `npm run format`       | Applies Prettier to Markdown, MDX, JSON, etc. |
-| `npm run format:check` | Runs Prettier in check mode (used by CI).     |
+| Command             | Description                                  |
+| ------------------- | -------------------------------------------- |
+| `ro format`         | Rewrites Markdown, MDX, JSON, and YAML docs. |
+| `ro format --check` | Runs Prettier in check mode (CI-equivalent). |
 
 ## Code Blocks
 
@@ -39,5 +39,5 @@ git status
 ## Embedded HTML
 
 <div class="note">
-  <p><strong>Reminder:</strong> Prettier formats fenced code blocks and inline HTML consistently with our docs site renderer.</p>
+  <p><strong>Reminder:</strong> Prettier handles inline HTML and fenced code without breaking the docs renderer.</p>
 </div>
