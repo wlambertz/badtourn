@@ -11,7 +11,8 @@
     "organizer:dev": "npm start --prefix application/organizer",
     "organizer:lint": "npm run lint --prefix application/organizer",
     "organizer:test": "npm run test --prefix application/organizer",
-    "organizer:test:ci": "npm run test:ci --prefix application/organizer"
+    "organizer:test:ci": "npm run test:ci --prefix application/organizer",
+    "organizer:test:e2e": "npm run test:e2e --prefix application/organizer"
   },
   "repository": {
     "type": "git",

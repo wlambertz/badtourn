@@ -31,6 +31,10 @@ apps:
         - npm
         - run
         - test:ci
+      "test:e2e":
+        - npm
+        - run
+        - test:e2e
 
 build:
   mavenWrapper: ./mvnw

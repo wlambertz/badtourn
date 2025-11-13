@@ -27,7 +27,8 @@
   - Local dev server: `npm run organizer:dev`
   - Lint + unit tests: `npm run organizer:lint` and `npm run organizer:test`
   - Headless CI suite: `npm run organizer:test:ci` (ChromeHeadless)
-  - Equivalent shortcuts via CLI: `ro app install|start|lint|test|test-ci organizer`
+  - Playwright smoke: `npm run organizer:test:e2e` (requires `npx playwright install --with-deps chromium`)
+  - Equivalent shortcuts via CLI: `ro app install|start|lint|test|test-ci|test-e2e organizer`
 
 ## Coding Style & Naming Conventions
 
