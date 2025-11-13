@@ -30,7 +30,21 @@ badtourn/
   - Turnierverwaltung: Planung/Konfiguration/Spielpläne.
   - Spielerverwaltung: Registrierung und Pflege von Spielern/Teams.
   - Ergebnisdienst: Erfassung/Berechnung von Ergebnissen und Ranglisten.
-  - Öffentliche Informationen: Lesemodelle/Ansichten für Spieler/Zuschauer.
+- Öffentliche Informationen: Lesemodelle/Ansichten für Spieler/Zuschauer.
+
+## Organizer-Portal (Angular 20)
+
+Der Organizer-Client befindet sich in `application/organizer/` und wird mit Angular 20 sowie PrimeNG aufgebaut. Für einen schnellen Einstieg gibt es Root-NPM-Skripte:
+
+- Abhängigkeiten installieren/aktualisieren: `npm run organizer:install`
+- Dev-Server (http://localhost:4200): `npm run organizer:dev`
+- Linting: `npm run organizer:lint`
+- Unit-Tests lokal (öffnet Chrome): `npm run organizer:test`
+- Headless-Testlauf für CI/PRs: `npm run organizer:test:ci`
+- Playwright-Smoke: `npm run organizer:test:e2e` (oder `ro app test-e2e organizer`)
+- Alternativ über die RallyOn-CLI: `ro app install|start|lint|test|test-ci|test-e2e organizer`
+
+Die Skripte rufen intern die jeweiligen Kommandos im Unterprojekt auf, sodass nichts am Arbeitsverzeichnis gewechselt werden muss.
 
 ## API-Dokumentation
 

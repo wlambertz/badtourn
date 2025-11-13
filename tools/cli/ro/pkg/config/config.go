@@ -17,17 +17,22 @@ type Paths struct {
 	AdminRoot      string `mapstructure:"adminRoot"`
 }
 
+type App struct {
+	Path    string              `mapstructure:"path"`
+	Scripts map[string][]string `mapstructure:"scripts"`
+}
+
 type Build struct {
 	MavenWrapper string   `mapstructure:"mavenWrapper"`
 	DefaultGoals []string `mapstructure:"defaultGoals"`
 }
 
 type Docker struct {
-	Workflow   string `mapstructure:"workflow"`
-	ImageRepo  string `mapstructure:"imageRepo"`
-	Registry   string `mapstructure:"registry"`
-	Context    string `mapstructure:"context"`
-	Dockerfile string `mapstructure:"dockerfile"`
+	Workflow    string `mapstructure:"workflow"`
+	ImageRepo   string `mapstructure:"imageRepo"`
+	Registry    string `mapstructure:"registry"`
+	Context     string `mapstructure:"context"`
+	Dockerfile  string `mapstructure:"dockerfile"`
 	ComposeFile string `mapstructure:"composeFile"`
 }
 
@@ -46,9 +51,9 @@ type Deploy struct {
 }
 
 type Git struct {
-	ConventionalCommits bool `mapstructure:"conventionalCommits"`
-	DefaultRemote        string `mapstructure:"defaultRemote"`
-	DefaultBranch        string `mapstructure:"defaultBranch"`
+	ConventionalCommits bool   `mapstructure:"conventionalCommits"`
+	DefaultRemote       string `mapstructure:"defaultRemote"`
+	DefaultBranch       string `mapstructure:"defaultBranch"`
 }
 
 type Output struct {
@@ -58,23 +63,23 @@ type Output struct {
 }
 
 type Docs struct {
-	Output       string `mapstructure:"output"`
-	WikiOutput   string `mapstructure:"wikiOutput"`
-	PublishToWiki bool  `mapstructure:"publishToWiki"`
-	AutoStageWiki bool  `mapstructure:"autoStageWiki"`
+	Output            string `mapstructure:"output"`
+	WikiOutput        string `mapstructure:"wikiOutput"`
+	PublishToWiki     bool   `mapstructure:"publishToWiki"`
+	AutoStageWiki     bool   `mapstructure:"autoStageWiki"`
 	WikiCommitMessage string `mapstructure:"wikiCommitMessage"`
 }
 
 type Scaffold struct {
-	TemplateDir string `mapstructure:"templateDir"`
+	TemplateDir    string `mapstructure:"templateDir"`
 	DefaultPackage string `mapstructure:"defaultPackage"`
-	BasePath string `mapstructure:"basePath"`
+	BasePath       string `mapstructure:"basePath"`
 }
 
 type Telemetry struct {
-	Enabled bool `mapstructure:"enabled"`
-	Endpoint string `mapstructure:"endpoint"`
-	ClientID string `mapstructure:"clientId"`
+	Enabled         bool     `mapstructure:"enabled"`
+	Endpoint        string   `mapstructure:"endpoint"`
+	ClientID        string   `mapstructure:"clientId"`
 	CollectCommands []string `mapstructure:"collectCommands"`
 }
 
@@ -84,16 +89,17 @@ type Project struct {
 }
 
 type Config struct {
-	Project Project `mapstructure:"project"`
-	Paths   Paths   `mapstructure:"paths"`
-	Build   Build   `mapstructure:"build"`
-	Docker  Docker  `mapstructure:"docker"`
-	Deploy  Deploy  `mapstructure:"deploy"`
-	Git     Git     `mapstructure:"git"`
-	Output  Output  `mapstructure:"output"`
-	Docs    Docs    `mapstructure:"docs"`
-	Scaffold Scaffold `mapstructure:"scaffold"`
-	Telemetry Telemetry `mapstructure:"telemetry"`
+	Project   Project        `mapstructure:"project"`
+	Paths     Paths          `mapstructure:"paths"`
+	Build     Build          `mapstructure:"build"`
+	Docker    Docker         `mapstructure:"docker"`
+	Deploy    Deploy         `mapstructure:"deploy"`
+	Git       Git            `mapstructure:"git"`
+	Output    Output         `mapstructure:"output"`
+	Docs      Docs           `mapstructure:"docs"`
+	Scaffold  Scaffold       `mapstructure:"scaffold"`
+	Telemetry Telemetry      `mapstructure:"telemetry"`
+	Apps      map[string]App `mapstructure:"apps"`
 }
 
 // Load merges configuration from ro.yaml, environment, and provides accessors.
@@ -147,6 +153,7 @@ func Load(repoRoot string) (*Config, error) {
 	v.SetDefault("telemetry.endpoint", "")
 	v.SetDefault("telemetry.clientId", "")
 	v.SetDefault("telemetry.collectCommands", []string{"deploy", "docker build", "docker compose", "scaffold module"})
+	v.SetDefault("apps", map[string]App{})
 
 	// Config file from repo root if provided, else perform upward search from CWD
 	if repoRoot == "" {
@@ -163,6 +170,9 @@ func Load(repoRoot string) (*Config, error) {
 	var cfg Config
 	if err := v.Unmarshal(&cfg); err != nil {
 		return nil, err
+	}
+	if cfg.Apps == nil {
+		cfg.Apps = map[string]App{}
 	}
 
 	// Normalize to absolute paths
@@ -183,6 +193,10 @@ func Load(repoRoot string) (*Config, error) {
 	cfg.Paths.AppRoot = toAbs(cfg.Paths.AppRoot)
 	cfg.Paths.ThirdPartyRoot = toAbs(cfg.Paths.ThirdPartyRoot)
 	cfg.Paths.AdminRoot = toAbs(cfg.Paths.AdminRoot)
+	for name, app := range cfg.Apps {
+		app.Path = toAbs(app.Path)
+		cfg.Apps[name] = app
+	}
 
 	// Platform-specific maven wrapper normalization
 	cfg.Build.MavenWrapper = normalizeMavenWrapper(cfg.Build.MavenWrapper)

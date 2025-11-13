@@ -1,0 +1,64 @@
+<div class="login">
+  <section class="login__hero">
+    <h1>Welcome back, organizer.</h1>
+    <p>
+      This lightweight portal lets staff log in, preview the dashboard, and click through seeded
+      flows before the backend automation lands.
+    </p>
+    <ul>
+      <li>Use the PrimeNG-styled form to simulate secure access.</li>
+      <li>Credentials for this build: <strong>organizer / rallyon</strong>.</li>
+      <li>Future work: swap fake auth for the real RallyOn identity provider.</li>
+    </ul>
+  </section>
+
+  <p-card class="login__card">
+    <ng-template pTemplate="header">
+      <div class="login__logo">
+        <span class="pi pi-bolt"></span>
+        <span>RallyOn Organizer</span>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          pInputText
+          formControlName="username"
+          autocomplete="username"
+        />
+        <small *ngIf="form.controls.username.invalid && form.controls.username.touched">
+          A username is required.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          pPassword
+          formControlName="password"
+          autocomplete="current-password"
+          [feedback]="false"
+        />
+        <small *ngIf="form.controls.password.invalid && form.controls.password.touched">
+          A password is required.
+        </small>
+      </div>
+
+      <div *ngIf="showCredentialsHint" class="login__error">
+        <span class="pi pi-exclamation-triangle"></span>
+        <div>
+          <strong>Check credentials.</strong>
+          <p>Use the stub login: organizer / rallyon.</p>
+        </div>
+      </div>
+
+      <p-button label="Sign in" icon="pi pi-arrow-right" type="submit" styleClass="login__submit" />
+    </form>
+  </p-card>
+</div>
