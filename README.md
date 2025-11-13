@@ -42,7 +42,7 @@ Der Organizer-Client befindet sich in `application/organizer/` und wird mit Angu
 - Unit-Tests lokal (öffnet Chrome): `npm run organizer:test`
 - Headless-Testlauf für CI/PRs: `npm run organizer:test:ci`
 - Playwright-Smoke: `npm run organizer:test:e2e` (oder `ro app test-e2e organizer`)
-- Alternativ über die RallyOn-CLI: `ro app install|start|lint|test|test-ci organizer`
+- Alternativ über die RallyOn-CLI: `ro app install|start|lint|test|test-ci|test-e2e organizer`
 
 Die Skripte rufen intern die jeweiligen Kommandos im Unterprojekt auf, sodass nichts am Arbeitsverzeichnis gewechselt werden muss.
 
