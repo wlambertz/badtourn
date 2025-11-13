@@ -41,5 +41,17 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
+[*.{ts,tsx,js,jsx}]
+indent_style = space
+indent_size = 2
+
+[*.html]
+indent_style = space
+indent_size = 2
+
+[*.{css,scss}]
+indent_style = space
+indent_size = 2
+
 [*.bat]
 end_of_line = crlf

@@ -6,7 +6,12 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "npm run format:check"
+    "lint": "npm run format:check",
+    "organizer:install": "npm install --prefix application/organizer",
+    "organizer:dev": "npm start --prefix application/organizer",
+    "organizer:lint": "npm run lint --prefix application/organizer",
+    "organizer:test": "npm run test --prefix application/organizer",
+    "organizer:test:ci": "npm run test:ci --prefix application/organizer"
   },
   "repository": {
     "type": "git",

@@ -8,6 +8,30 @@ paths:
   thirdPartyRoot: 3rd_party
   adminRoot: admin
 
+apps:
+  organizer:
+    path: application/organizer
+    scripts:
+      install:
+        - npm
+        - install
+      start:
+        - npm
+        - run
+        - start
+      lint:
+        - npm
+        - run
+        - lint
+      test:
+        - npm
+        - run
+        - test
+      "test:ci":
+        - npm
+        - run
+        - test:ci
+
 build:
   mavenWrapper: ./mvnw
   defaultGoals: ["clean", "verify"]
