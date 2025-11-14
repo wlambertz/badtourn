@@ -1,4 +1,4 @@
-@import 'primeflex/primeflex.css';
-@import 'primeicons/primeicons.css';
-
+@use './styles/tailwind';
 @use './styles/index';
+
+@import 'primeicons/primeicons.css';

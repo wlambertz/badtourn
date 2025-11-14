@@ -1,7 +1,8 @@
 body {
   margin: 0;
   font-family:
-    'Inter',
+    'IBM Plex Sans',
+    'Space Grotesk',
     'Segoe UI',
     system-ui,
     -apple-system,
@@ -10,6 +11,24 @@ body {
   background-color: var(--rallyon-surface);
   color: var(--rallyon-text);
   line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    'Space Grotesk',
+    'IBM Plex Sans',
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 a {
@@ -21,4 +40,18 @@ a:hover,
 a:focus-visible {
   color: var(--rallyon-primary-dark);
   text-decoration: underline;
+}
+
+.font-doto {
+  font-family:
+    'Doto',
+    'Space Grotesk',
+    'IBM Plex Sans',
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }

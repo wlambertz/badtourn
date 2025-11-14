@@ -1,6 +1,6 @@
 # Global Styles Layout
 
-This directory follows a lean ITCSS-inspired layering so we can scale gradually without dragging along unused boilerplate. The entry point is `../styles.scss`, which `@use`s `_index.scss` to compose the layers in a top-down (inverted triangle) order.
+This directory follows a lean ITCSS-inspired layering so we can scale gradually without dragging along unused boilerplate. The entry point is `../styles.scss`, which imports the Tailwind directives from `tailwind.scss` and then `@use`s `_index.scss` to compose the layers in a top-down (inverted triangle) order.
 
 ```
 settings/   → design tokens, CSS variables, PrimeNG theme overrides
