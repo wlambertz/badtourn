@@ -1,45 +1,4 @@
 @import 'primeflex/primeflex.css';
 @import 'primeicons/primeicons.css';
 
-:root {
-  --rallyon-primary: #4b39ef;
-  --rallyon-primary-dark: #3a2bb2;
-  --rallyon-surface: #f5f7fb;
-  --rallyon-text: #0f172a;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family:
-    'Inter',
-    'Segoe UI',
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-  background-color: var(--rallyon-surface);
-  color: var(--rallyon-text);
-  line-height: 1.4;
-}
-
-a {
-  color: var(--rallyon-primary);
-  text-decoration: none;
-}
-
-a:hover,
-a:focus-visible {
-  color: var(--rallyon-primary-dark);
-  text-decoration: underline;
-}
+@use './styles/index';

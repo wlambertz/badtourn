@@ -35,6 +35,14 @@ apps:
         - npm
         - run
         - test:e2e
+      storybook:
+        - npm
+        - run
+        - storybook
+      "build-storybook":
+        - npm
+        - run
+        - build-storybook
 
 build:
   mavenWrapper: ./mvnw

@@ -103,5 +103,7 @@ func init() {
 	appCmd.AddCommand(newAppScriptCommand("lint", "Run the app linter", "lint"))
 	appCmd.AddCommand(newAppScriptCommand("test", "Run the default app unit tests", "test"))
 	appCmd.AddCommand(newAppScriptCommand("test-ci", "Run the CI headless test target", "test:ci"))
+	appCmd.AddCommand(newAppScriptCommand("storybook", "Run the Storybook dev server", "storybook"))
+	appCmd.AddCommand(newAppScriptCommand("build-storybook", "Build the static Storybook bundle", "build-storybook"))
 	rootCmd.AddCommand(appCmd)
 }
