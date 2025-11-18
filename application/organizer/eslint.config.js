@@ -15,6 +15,7 @@ export default tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      semi: ['error', 'never'],
       '@angular-eslint/directive-selector': [
         'error',
         {

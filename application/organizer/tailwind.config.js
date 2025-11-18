@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const primeui = require('tailwindcss-primeui');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -22,5 +23,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [primeui],
 };

@@ -2,13 +2,13 @@ import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
-} from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
-import { providePrimeNG } from 'primeng/config';
-import Lara from '@primeng/themes/lara';
+} from '@angular/core'
+import { provideAnimations } from '@angular/platform-browser/animations'
+import { provideRouter } from '@angular/router'
+import { providePrimeNG } from 'primeng/config'
+import { SurfacePreset } from './rallyonpreset'
 
-import { routes } from './app.routes';
+import { routes } from './app.routes'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,11 +17,14 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     providePrimeNG({
-      ripple: true,
-      inputVariant: 'outlined',
+      ripple: false,
+      inputVariant: 'filled',
       theme: {
-        preset: Lara,
+        preset: SurfacePreset,
+        options: {
+          darkModeSelector: 'none',
+        },
       },
     }),
   ],
-};
+}

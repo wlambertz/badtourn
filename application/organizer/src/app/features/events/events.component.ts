@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common'
+import { Component, inject } from '@angular/core'
+import { Router } from '@angular/router'
+import { ButtonModule } from 'primeng/button'
+import { CardModule } from 'primeng/card'
 
 @Component({
   selector: 'app-events-placeholder',
@@ -12,9 +12,9 @@ import { CardModule } from 'primeng/card';
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
-  private readonly router = inject(Router);
+  private readonly router = inject(Router)
 
   goBackToDashboard(): void {
-    this.router.navigateByUrl('/dashboard');
+    this.router.navigateByUrl('/dashboard')
   }
 }

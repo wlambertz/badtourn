@@ -1,24 +1,24 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core'
 
 export interface QuickAction {
-  label: string;
-  description: string;
-  route: string;
-  icon: string;
+  label: string
+  description: string
+  route: string
+  icon: string
 }
 
 export interface UpcomingEvent {
-  name: string;
-  date: string;
-  location: string;
-  status: 'Draft' | 'Open' | 'Closed';
-  registeredTeams: number;
+  name: string
+  date: string
+  location: string
+  status: 'Draft' | 'Open' | 'Closed'
+  registeredTeams: number
 }
 
 export interface DashboardSummary {
-  welcomeMessage: string;
-  quickActions: QuickAction[];
-  upcomingEvent: UpcomingEvent;
+  welcomeMessage: string
+  quickActions: QuickAction[]
+  upcomingEvent: UpcomingEvent
 }
 
 @Injectable({
@@ -54,7 +54,7 @@ export class DashboardService {
       status: 'Draft',
       registeredTeams: 12,
     },
-  });
+  })
 
-  readonly summary = computed(() => this.summaryState());
+  readonly summary = computed(() => this.summaryState())
 }

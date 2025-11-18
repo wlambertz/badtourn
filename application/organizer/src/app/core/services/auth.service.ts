@@ -1,56 +1,56 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core'
 
 interface OrganizerUser {
-  username: string;
+  username: string
 }
 
 interface AuthState {
-  user: OrganizerUser | null;
+  user: OrganizerUser | null
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly storageKey = 'rallyon.organizer.session';
+  private readonly storageKey = 'rallyon.organizer.session'
   private readonly state = signal<AuthState>({
     user: this.readStoredSession(),
-  });
+  })
 
-  readonly user = computed(() => this.state().user);
-  readonly isAuthenticated = computed(() => this.user() !== null);
+  readonly user = computed(() => this.state().user)
+  readonly isAuthenticated = computed(() => this.user() !== null)
 
   login(username: string, password: string): boolean {
-    const trimmedUsername = username.trim();
-    const trimmedPassword = password.trim();
-    const isValid = trimmedUsername === 'organizer' && trimmedPassword === 'rallyon';
+    const trimmedUsername = username.trim()
+    const trimmedPassword = password.trim()
+    const isValid = trimmedUsername === 'organizer' && trimmedPassword === 'rallyon'
 
     if (isValid) {
-      const user: OrganizerUser = { username: trimmedUsername };
-      this.persistSession(user);
-      this.state.set({ user });
-      return true;
+      const user: OrganizerUser = { username: trimmedUsername }
+      this.persistSession(user)
+      this.state.set({ user })
+      return true
     }
 
-    this.logout();
-    return false;
+    this.logout()
+    return false
   }
 
   logout(): void {
-    localStorage.removeItem(this.storageKey);
-    this.state.set({ user: null });
+    localStorage.removeItem(this.storageKey)
+    this.state.set({ user: null })
   }
 
   private readStoredSession(): OrganizerUser | null {
     try {
-      const raw = localStorage.getItem(this.storageKey);
-      return raw ? (JSON.parse(raw) as OrganizerUser) : null;
+      const raw = localStorage.getItem(this.storageKey)
+      return raw ? (JSON.parse(raw) as OrganizerUser) : null
     } catch {
-      return null;
+      return null
     }
   }
 
   private persistSession(user: OrganizerUser): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(user));
+    localStorage.setItem(this.storageKey, JSON.stringify(user))
   }
 }
