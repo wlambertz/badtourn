@@ -1,9 +1,10 @@
-// @ts-check
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from 'eslint-plugin-storybook';
+import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import angular from 'angular-eslint';
 
-module.exports = tseslint.config(
+export default tseslint.config(
   {
     files: ['**/*.ts'],
     extends: [
@@ -14,6 +15,7 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      semi: ['error', 'never'],
       '@angular-eslint/directive-selector': [
         'error',
         {
@@ -30,6 +32,13 @@ module.exports = tseslint.config(
           style: 'kebab-case',
         },
       ],
+    },
+  },
+  {
+    files: ['src/stories/**/*.ts'],
+    rules: {
+      '@angular-eslint/component-selector': 'off',
+      '@angular-eslint/no-output-on-prefix': 'off',
     },
   },
   {

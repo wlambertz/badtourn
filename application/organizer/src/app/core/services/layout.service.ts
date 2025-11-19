@@ -1,22 +1,22 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core'
 
 @Injectable({
   providedIn: 'root',
 })
 export class LayoutService {
-  private readonly sidebarState = signal(false);
+  private readonly sidebarState = signal(false)
 
-  readonly sidebarVisible = computed(() => this.sidebarState());
+  readonly sidebarVisible = computed(() => this.sidebarState())
 
   openSidebar(): void {
-    this.sidebarState.set(true);
+    this.sidebarState.set(true)
   }
 
   closeSidebar(): void {
-    this.sidebarState.set(false);
+    this.sidebarState.set(false)
   }
 
   toggleSidebar(): void {
-    this.sidebarState.update((visible) => !visible);
+    this.sidebarState.update((visible) => !visible)
   }
 }

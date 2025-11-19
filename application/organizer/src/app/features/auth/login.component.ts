@@ -1,23 +1,21 @@
-import { Component, inject } from '@angular/core';
-import { NgIf } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
+import { Component, inject } from '@angular/core'
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { ButtonModule } from 'primeng/button'
+import { FloatLabelModule } from 'primeng/floatlabel'
+import { InputTextModule } from 'primeng/inputtext'
+import { PasswordModule } from 'primeng/password'
+import { RippleModule } from 'primeng/ripple'
 
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service'
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     ButtonModule,
-    CardModule,
+    FloatLabelModule,
     InputTextModule,
     PasswordModule,
     RippleModule,
@@ -26,36 +24,36 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder)
+  private readonly authService = inject(AuthService)
+  private readonly router = inject(Router)
 
   readonly form = this.fb.nonNullable.group({
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
-  });
+  })
 
-  showError = false;
+  showError = false
 
   submit(): void {
-    this.form.markAllAsTouched();
+    this.form.markAllAsTouched()
     if (this.form.invalid) {
-      return;
+      return
     }
 
-    const { username, password } = this.form.getRawValue();
-    const success = this.authService.login(username, password);
+    const { username, password } = this.form.getRawValue()
+    const success = this.authService.login(username, password)
 
     if (success) {
-      this.showError = false;
-      this.router.navigateByUrl('/dashboard');
-      return;
+      this.showError = false
+      this.router.navigateByUrl('/dashboard')
+      return
     }
 
-    this.showError = true;
+    this.showError = true
   }
 
   get showCredentialsHint(): boolean {
-    return this.showError;
+    return this.showError
   }
 }
