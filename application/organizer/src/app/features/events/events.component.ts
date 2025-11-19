@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button'
 import { CardModule } from 'primeng/card'
 
 @Component({
-  selector: 'app-events-placeholder',
+  selector: 'ro-events-placeholder',
   standalone: true,
   imports: [CommonModule, ButtonModule, CardModule],
   templateUrl: './events.component.html',

@@ -1,0 +1,95 @@
+<aside class="side-nav" [class.side-nav--collapsed]="collapsed">
+  <div class="side-nav__header">
+    <div class="side-nav__brand">
+      <div class="side-nav__logo">RO</div>
+      <div class="side-nav__brand-text">
+        <p>RallyOn Organizer</p>
+        <small>Navigation</small>
+      </div>
+    </div>
+    <button
+      class="side-nav__collapse-btn"
+      type="button"
+      [attr.aria-label]="collapsed ? 'Expand navigation' : 'Collapse navigation'"
+      [attr.aria-pressed]="collapsed"
+      (click)="onCollapseToggle()"
+    >
+      <span class="pi" [class.pi-chevron-right]="collapsed" [class.pi-chevron-left]="!collapsed"></span>
+    </button>
+  </div>
+
+  @if (quickAction) {
+    <a
+      class="side-nav__action"
+      [routerLink]="quickAction!.route"
+      [attr.title]="collapsed ? quickAction!.label : null"
+      [attr.aria-label]="collapsed ? quickAction!.label : null"
+      (click)="onActionSelect(quickAction!)"
+    >
+      <div class="side-nav__action-text">
+        <p>{{ quickAction!.label }}</p>
+        <small>{{ quickAction!.description }}</small>
+      </div>
+      <span class="pi {{ quickAction!.icon }}"></span>
+    </a>
+  }
+
+  <nav aria-label="Primary">
+    @for (section of sections; track section.label) {
+      <div class="side-nav__section">
+        <p class="side-nav__section-label">{{ section.label }}</p>
+        <div class="side-nav__links">
+          @for (item of section.items; track item.route) {
+            <a
+              class="side-nav__link"
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              [attr.title]="collapsed ? item.label : null"
+              [attr.aria-label]="collapsed ? item.label : null"
+              (click)="onLinkSelect(item)"
+            >
+              <span class="pi {{ item.icon }}"></span>
+              <div class="side-nav__link-text">
+                <span>{{ item.label }}</span>
+                @if (item.description) {
+                  <small>{{ item.description }}</small>
+                }
+              </div>
+              @if (item.badge) {
+                <span class="side-nav__badge">{{ item.badge }}</span>
+              }
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </nav>
+
+  @if (profile) {
+    <div class="side-nav__profile" [attr.title]="collapsed ? profile!.name : null">
+      <div class="side-nav__avatar">{{ initials() }}</div>
+      <div class="side-nav__profile-details">
+        <p>{{ profile!.name }}</p>
+        <small>{{ profile!.role }}</small>
+        <small>{{ profile!.email }}</small>
+      </div>
+      @if (profile!.status) {
+        <span class="side-nav__pill">{{ profile!.status }}</span>
+      }
+      <button
+        type="button"
+        class="side-nav__logout"
+        [attr.aria-label]="collapsed ? 'Sign out' : null"
+        (click)="requestLogout()"
+      >
+        <span class="pi pi-sign-out"></span>
+        <span class="side-nav__logout-label">Sign out</span>
+      </button>
+    </div>
+  }
+
+  <footer class="side-nav__footer" [attr.aria-hidden]="collapsed">
+    <p>© {{ currentYear }} RallyOn</p>
+    <small>Side navigation preview</small>
+  </footer>
+</aside>

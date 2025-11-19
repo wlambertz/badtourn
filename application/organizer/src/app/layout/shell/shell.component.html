@@ -1,5 +1,15 @@
-<app-navigation />
 <div class="shell">
+  <aside class="shell__sidebar" [class.shell__sidebar--collapsed]="navCollapsed()">
+    <ro-dummy-side-navbar
+      [sections]="sections"
+      [quickAction]="quickAction"
+      [profile]="profile"
+      [collapsed]="navCollapsed()"
+      (collapsedChange)="onCollapsedChange($event)"
+      (logout)="onLogout()"
+    />
+  </aside>
+
   <main class="shell__content">
     <router-outlet />
   </main>

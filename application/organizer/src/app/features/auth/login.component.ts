@@ -10,7 +10,7 @@ import { RippleModule } from 'primeng/ripple'
 import { AuthService } from '../../core/services/auth.service'
 
 @Component({
-  selector: 'app-login',
+  selector: 'ro-login',
   standalone: true,
   imports: [
     ReactiveFormsModule,

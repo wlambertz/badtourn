@@ -3,7 +3,7 @@ import { Component } from '@angular/core'
 import { CardModule } from 'primeng/card'
 
 @Component({
-  selector: 'app-settings-placeholder',
+  selector: 'ro-settings-placeholder',
   standalone: true,
   imports: [CommonModule, CardModule],
   templateUrl: './settings.component.html',

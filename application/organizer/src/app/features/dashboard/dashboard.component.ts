@@ -7,10 +7,9 @@ import { DividerModule } from 'primeng/divider'
 import { TagModule } from 'primeng/tag'
 
 import { DashboardService, QuickAction, UpcomingEvent } from './dashboard.service'
-import { LayoutService } from '../../core/services/layout.service'
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'ro-dashboard',
   standalone: true,
   imports: [CommonModule, ButtonModule, CardModule, DividerModule, TagModule],
   templateUrl: './dashboard.component.html',
@@ -18,16 +17,11 @@ import { LayoutService } from '../../core/services/layout.service'
 })
 export class DashboardComponent {
   private readonly dashboardService = inject(DashboardService)
-  private readonly layoutService = inject(LayoutService)
   private readonly router = inject(Router)
 
   protected readonly summary = this.dashboardService.summary
   protected readonly upcomingEvent = computed<UpcomingEvent>(() => this.summary().upcomingEvent)
   protected readonly quickActions = computed<QuickAction[]>(() => this.summary().quickActions)
-
-  openSidebar(): void {
-    this.layoutService.openSidebar()
-  }
 
   onActionSelect(action: QuickAction): void {
     this.router.navigateByUrl(action.route)

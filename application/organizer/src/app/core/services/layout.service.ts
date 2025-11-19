@@ -4,19 +4,33 @@ import { Injectable, computed, signal } from '@angular/core'
   providedIn: 'root',
 })
 export class LayoutService {
-  private readonly sidebarState = signal(false)
+  private readonly storageKey = 'rallyon.organizer.navCollapsed'
+  private readonly collapsedState = signal(this.readInitialState())
 
-  readonly sidebarVisible = computed(() => this.sidebarState())
+  readonly navCollapsed = computed(() => this.collapsedState())
 
-  openSidebar(): void {
-    this.sidebarState.set(true)
+  setCollapsed(collapsed: boolean): void {
+    this.collapsedState.set(collapsed)
+    this.persistState(collapsed)
   }
 
-  closeSidebar(): void {
-    this.sidebarState.set(false)
+  toggleCollapsed(): void {
+    this.setCollapsed(!this.collapsedState())
   }
 
-  toggleSidebar(): void {
-    this.sidebarState.update((visible) => !visible)
+  private readInitialState(): boolean {
+    try {
+      return localStorage.getItem(this.storageKey) === 'true'
+    } catch {
+      return false
+    }
+  }
+
+  private persistState(collapsed: boolean): void {
+    try {
+      localStorage.setItem(this.storageKey, String(collapsed))
+    } catch {
+      // ignore persistence failures
+    }
   }
 }

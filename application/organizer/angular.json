@@ -14,12 +14,13 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "prefix": "ro"
         }
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "ro",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
