@@ -36,6 +36,11 @@ apps:
         - run
         - test:e2e
       storybook:
+        - env
+        - CHOKIDAR_USEPOLLING=1
+        - STORYBOOK_DISABLE_PERSISTENT_CACHE=1
+        - STORYBOOK_CACHE_DIR=/tmp/storybook-cache
+        - NODE_OPTIONS=--trace-warnings
         - npm
         - run
         - storybook

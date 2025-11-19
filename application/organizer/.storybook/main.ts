@@ -40,6 +40,13 @@ const config: StorybookConfig = {
       })
     );
 
+    baseConfig.watchOptions = {
+      ...(baseConfig.watchOptions ?? {}),
+      poll: 1500,
+      aggregateTimeout: 300,
+      ignored: ['**/node_modules/**', '**/.angular/**', '**/.cache/**'],
+    };
+
     return baseConfig;
   },
 };

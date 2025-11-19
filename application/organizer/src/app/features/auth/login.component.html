@@ -4,7 +4,7 @@
       <div class="flex gap-10 flex-row justify-center">
         <div class="w-2/3 p-10">
           <h1 class="text-6xl font-thin font-doto text-center pb-6">
-            keep<br />calm<br />and<br />RallyOn!
+            keep<br/>calm<br/>and<br/><span class="font-bold">RallyOn!</span>
           </h1>
           <p class="text-lg font-thin pb-6">
             Welcome to RallyOn Organizer, your launchpad for orchestrating tournaments with
@@ -21,7 +21,7 @@
 
           <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="w-3/4">
             <div class="flex flex-col gap-4">
-              <p-floatlabel>
+              <div>
                 <label for="username">Username</label>
                 <input
                   pInputText
@@ -31,18 +31,18 @@
                   autocomplete="username"
                   fluid
                 />
-              </p-floatlabel>
+              </div>
               @if (form.controls.username.invalid && form.controls.username.touched) {
                 <small> A username is required. </small>
               }
 
-              <p-floatlabel>
-                <p-password inputId="password" formControlName="password" autocomplete="off" fluid></p-password>
+              <div>
                 <label for="password">Password</label>
+                <p-password inputId="password" formControlName="password" autocomplete="off" fluid [feedback]="false"></p-password>
                 @if (form.controls.password.invalid && form.controls.password.touched) {
                   <small> A password is required. </small>
                 }
-              </p-floatlabel>
+              </div>
 
               @if (showCredentialsHint) {
                 <div class="login__error">
@@ -54,7 +54,7 @@
                 </div>
               }
 
-              <p-button label="Sign in" icon="pi pi-arrow-right" type="submit" serverity="secondary" fluid/>
+              <p-button label="Sign in" type="submit" fluid/>
             </div>
           </form>
         </div>
