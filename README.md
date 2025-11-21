@@ -1,11 +1,11 @@
-# BadTourn
+# RallyOn!
 
-BadTourn – Das smarte System für Badmintonturniere
+RallyOn! – Das smarte System für Badmintonturniere
 
 ## Projektstruktur
 
 ```text
-badtourn/
+rallyon/
   application/                 App-Bootstrap, Zusammensetzung der Module (Composition Root)
     organizer/                 Oberfläche/Workflows für Organisator:innen
     audience/                  Öffentliche Ansichten für Zuschauer:innen ("Turnier-TV")
@@ -61,7 +61,7 @@ Das GitHub-Wiki ist als Submodul im Ordner `wiki/` eingebunden.
 - Initiales Klonen mit Submodulen:
 
   ```bash
-  git clone --recurse-submodules https://github.com/wlambertz/badtourn.git
+  git clone --recurse-submodules https://github.com/wlambertz/rallyon.git
   ```
 
 - Falls bereits geklont, Submodul initialisieren und holen:

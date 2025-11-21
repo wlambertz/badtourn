@@ -1,0 +1,91 @@
+.rolling-ribbon-container {
+  width: 100%;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.rolling-ribbon-content {
+  display: flex;
+  white-space: nowrap;
+  color: var(--text-color);
+  font-size: 1rem;
+  font-family: 'Doto', sans-serif;
+  font-weight: 700;
+
+  // Standard continuous scroll (no highlight)
+  &:not(.with-highlight) {
+    animation: scroll-continuous var(--animation-duration) linear infinite;
+  }
+
+  // Scroll with highlight pause-blink-restart
+  &.with-highlight {
+    animation: scroll-to-highlight var(--animation-duration) linear infinite;
+  }
+}
+
+.ribbon-text {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.separator {
+  margin: 0 0.5rem;
+}
+
+.highlight-word {
+  font-weight: 700;
+  margin-left: 0.5rem;
+
+  // Apply blink animation during the sequence
+  .with-highlight & {
+    animation: blink-highlight 0.6s step-end 0s 3;
+    animation-delay: calc(var(--animation-duration) * 0.85);
+  }
+}
+
+// Continuous scroll animation (no highlight word)
+@keyframes scroll-continuous {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// Scroll animation with pause for highlight
+@keyframes scroll-to-highlight {
+  0% {
+    transform: translateX(0);
+  }
+  // Scroll to show highlight word (85% of duration)
+  85% {
+    transform: translateX(-50%);
+  }
+  // Pause while highlight blinks (3 blinks = 0.6s, ~5% of 20s default)
+  90% {
+    transform: translateX(-50%);
+  }
+  // Quick reset (invisible)
+  90.1% {
+    transform: translateX(0);
+  }
+  // Hold at start before restart
+  100% {
+    transform: translateX(0);
+  }
+}
+
+// Blink animation for highlight word
+@keyframes blink-highlight {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
