@@ -1,19 +1,13 @@
 <div class="rolling-ribbon-container" [ngClass]="styleClass" [ngStyle]="containerStyles">
-    <div class="rolling-ribbon-content" [class.with-highlight]="hasHighlight">
-        <span class="ribbon-text">
-            {{ displayText }}
-            @if (hasHighlight) {
-            <span class="separator">{{ separator }}</span>
-            <span class="highlight-word">{{ highlightWord }}</span>
-            }
-        </span>
-        <!-- Duplicate for seamless loop -->
-        <span class="ribbon-text" aria-hidden="true">
-            {{ displayText }}
-            @if (hasHighlight) {
-            <span class="separator">{{ separator }}</span>
-            <span class="highlight-word">{{ highlightWord }}</span>
-            }
-        </span>
-    </div>
+  <div class="scrolling-text">
+    <span class="ribbon-text">
+      {{ displayText }}
+      <span class="separator">{{ loopDelimiter }}</span>
+    </span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ribbon-text" aria-hidden="true">
+      {{ displayText }}
+      <span class="separator">{{ loopDelimiter }}</span>
+    </span>
+  </div>
 </div>
